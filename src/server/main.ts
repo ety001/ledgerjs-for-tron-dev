@@ -38,7 +38,7 @@ app.get('/create_emulator', async (_, res) => {
     model: DeviceModelId.nanoS,
     appName: 'Tron',
     appVersion: '0.7.0',
-    coinapps: '/home/ety001/workspace/app-tron/build',
+    coinapps: './bin',
     seed: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
     firmware: '2.0',
     overridesAppPath: 'nanos/bin/app.elf',
