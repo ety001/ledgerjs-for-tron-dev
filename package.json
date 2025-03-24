@@ -11,6 +11,8 @@
   "dependencies": {
     "@ledgerhq/hw-app-trx": "^6.29.4",
     "@ledgerhq/hw-transport-node-speculos": "^6.29.4",
+    "@ledgerhq/live-env": "^2.6.0",
+    "@ledgerhq/speculos-transport": "^0.1.10",
     "express": "^4.18.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
