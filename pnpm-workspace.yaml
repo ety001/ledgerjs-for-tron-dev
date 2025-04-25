@@ -1,0 +1,2 @@
+overrides:
+  '@ledgerhq/hw-app-trx': link:../ledger-live/libs/ledgerjs/packages/hw-app-trx
