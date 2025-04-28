@@ -31,7 +31,7 @@ export async function POST(request: Request) {
 
 async function signPersonalMessage(device: SpeculosDeviceInternal, path: string, message: string) {
   const transport = device.transport;
-  const app = new Trx.default(transport);
+  const app = new Trx(transport);
   const appConfig = await app.getAppConfiguration();
   console.log(appConfig);
   const address = await app.getAddress(path);

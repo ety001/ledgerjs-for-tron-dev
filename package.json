@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@ledgerhq/hw-app-trx": "link:hw-app-trx",
     "@ledgerhq/speculos-transport": "^0.2.0",
     "next": "15.3.1",
     "react": "^19.0.0",
