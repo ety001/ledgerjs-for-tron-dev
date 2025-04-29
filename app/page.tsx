@@ -4,24 +4,17 @@ import SignTIP712Message from "@/components/signTIP712Message";
 import Speculos from "@/components/speculos";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SceneSelector from "@/components/sceneSelector";
-import { useGlobal } from "@/app/context/GlobalContext";
+import { useGlobal, DeviceType } from "@/app/context/GlobalContext";
 
 export default function Home() {
-  const { state, connectWallet, disconnectWallet, updateNetwork } = useGlobal();
+  const { state, setDevice } = useGlobal();
 
-  const handleConnect = () => {
-    // 使用抽离的函数更新状态
-    connectWallet("0x1234567890abcdef", "testnet");
-  };
-
-  const handleDisconnect = () => {
-    // 使用抽离的函数更新状态
-    disconnectWallet();
-  };
-
-  const handleNetworkChange = (network: string) => {
-    // 使用抽离的函数更新状态
-    updateNetwork(network);
+  const handleTabChange = (value: string) => {
+    if (value === "speculos") {
+      setDevice(DeviceType.Speculos);
+    } else if (value === "ledgerHardware") {
+      setDevice(DeviceType.LedgerHQ);
+    }
   };
 
   return (
@@ -31,7 +24,11 @@ export default function Home() {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-8 gap-4">
         <div className="col-span-3">
-          <Tabs defaultValue="speculos" className="w-auto">
+          <Tabs 
+            defaultValue={state.device === DeviceType.Speculos ? "speculos" : "ledgerHardware"} 
+            className="w-auto"
+            onValueChange={handleTabChange}
+          >
             <TabsList>
               <TabsTrigger value="speculos">Speculos</TabsTrigger>
               <TabsTrigger value="ledgerHardware">Ledger Hardware</TabsTrigger>
