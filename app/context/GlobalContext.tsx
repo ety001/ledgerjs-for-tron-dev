@@ -1,19 +1,24 @@
+"use client";
+
 import React, { createContext, useContext, useState, ReactNode } from 'react';
-import {
-  DeviceModelId,
-} from "@ledgerhq/speculos-transport";
 
 export enum DeviceType {
   Speculos = 'speculos',
   LedgerHQ = 'ledgerhq'
 }
 
+export enum DeviceModel {
+  nanoS = 'nanoS',
+  nanoX = 'nanoX',
+  nanoSP = 'nanoSP',
+}
+
 export interface SpeculosEmulator {
   status: boolean;
-  model: DeviceModelId | null;
+  model: DeviceModel | null;
   appName: string;
   appVersion: string;
-  coinAppsPath: string;
+  coinapps: string;
   firmware: string;
   overridesAppPath: string;
   seed: string;
@@ -21,7 +26,7 @@ export interface SpeculosEmulator {
 
 export interface LedgerHQEmulator {
   status: boolean;
-  model: DeviceModelId | null;
+  model: DeviceModel | null;
   appName: string;
   appVersion: string;
 }
@@ -42,7 +47,7 @@ const defaultState: GlobalState = {
   device: DeviceType.Speculos,
   speculos: {
     status: false,
-    model: DeviceModelId.nanoS,
+    model: DeviceModel.nanoS,
     appName: 'Tron',
     appVersion: '0.7.0',
     coinAppsPath: './bin',

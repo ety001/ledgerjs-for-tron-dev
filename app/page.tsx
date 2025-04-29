@@ -1,3 +1,5 @@
+"use client";
+
 import LedgerHardware from "@/components/ledgerHardware";
 import SignPersonalMessage from "@/components/signPersonalMessage";
 import SignTIP712Message from "@/components/signTIP712Message";

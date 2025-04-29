@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,10 +11,29 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import { useGlobal } from "@/app/context/GlobalContext";
 
 export default function SpeculosSettings() {
+  const { state, setSpeculos } = useGlobal();
+  const [settings, setSettings] = useState(state.speculos);
+  const [open, setOpen] = useState(false);
+
+  const handleInputChange = (field: keyof typeof settings, value: string) => {
+    console.log(field, value);
+    setSettings(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSave = () => {
+    setSpeculos(settings);
+    setOpen(false);
+    toast.success('Settings saved successfully!');
+  };
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           className="bg-sky-500/100"
@@ -31,7 +52,8 @@ export default function SpeculosSettings() {
               <Label htmlFor="model">Model</Label>
               <Input
                 id="model"
-                defaultValue="nanoS"
+                value={settings.model || ''}
+                onChange={(e) => handleInputChange('model', e.target.value)}
                 className="col-span-2 h-8"
               />
             </div>
@@ -39,7 +61,8 @@ export default function SpeculosSettings() {
               <Label htmlFor="appName">App Name</Label>
               <Input
                 id="appName"
-                defaultValue="Tron"
+                value={settings.appName}
+                onChange={(e) => handleInputChange('appName', e.target.value)}
                 className="col-span-2 h-8"
               />
             </div>
@@ -47,15 +70,17 @@ export default function SpeculosSettings() {
               <Label htmlFor="appVersion">App Version</Label>
               <Input
                 id="appVersion"
-                defaultValue="0.7.0"
+                value={settings.appVersion}
+                onChange={(e) => handleInputChange('appVersion', e.target.value)}
                 className="col-span-2 h-8"
               />
             </div>
             <div className="grid grid-cols-3 items-center gap-4">
-              <Label htmlFor="coinAppsPath">Coin Apps Path</Label>
+              <Label htmlFor="coinapps">Coin Apps</Label>
               <Input
-                id="coinAppsPath"
-                defaultValue="./bin"
+                id="coinapps"
+                value={settings.coinapps}
+                onChange={(e) => handleInputChange('coinapps', e.target.value)}
                 className="col-span-2 h-8"
               />
             </div>
@@ -63,7 +88,8 @@ export default function SpeculosSettings() {
               <Label htmlFor="firmware">Firmware</Label>
               <Input
                 id="firmware"
-                defaultValue="2.0"
+                value={settings.firmware}
+                onChange={(e) => handleInputChange('firmware', e.target.value)}
                 className="col-span-2 h-8"
               />
             </div>
@@ -71,7 +97,8 @@ export default function SpeculosSettings() {
               <Label htmlFor="overridesAppPath">Overrides App Path</Label>
               <Input
                 id="overridesAppPath"
-                defaultValue="nanoS/app.elf"
+                value={settings.overridesAppPath}
+                onChange={(e) => handleInputChange('overridesAppPath', e.target.value)}
                 className="col-span-2 h-8"
               />
             </div>
@@ -79,13 +106,20 @@ export default function SpeculosSettings() {
               <Label htmlFor="seed">Seed</Label>
               <Textarea
                 id="seed"
-                defaultValue="abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
+                value={settings.seed}
+                onChange={(e) => handleInputChange('seed', e.target.value)}
                 className="col-span-2 h-48"
               />
+            </div>
+            <div className="grid items-center gap-4">
+              <Button
+                className="bg-teal-500/100"
+                onClick={handleSave}
+              >Save</Button>
             </div>
           </div>
         </div>
       </PopoverContent>
     </Popover>
-  )
+  );
 }
