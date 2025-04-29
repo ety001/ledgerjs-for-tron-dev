@@ -27,33 +27,59 @@ import {
 import { useGlobal } from "@/app/context/GlobalContext";
 import SpeculosSettings from "@/components/speculosSettings";
 import { toast } from "sonner";
-import { emulatorCreate, emulatorDestroy } from "@/lib/client";
+import { emulatorCreate, emulatorDestroy, sendBtn, BtnKey } from "@/lib/client";
 
 export default function Speculos() {
   const [status, setStatus] = useState<"running" | "stopped">("stopped");
   const [error, setError] = useState<string | null>(null);
-  const { state } = useGlobal();
+  const { state, setSpeculos } = useGlobal();
 
   const handleStart = async () => {
+    if (status === "running") {
+      toast.error("Emulator is already running");
+      return;
+    }
+    setError(null);
     const res = await emulatorCreate(state.speculos);
     if (res.status === "error") {
       setError(res.message);
       return;
     }
-    setError(null);
     setStatus("running");
+    setSpeculos({
+      ...state.speculos,
+      status: true,
+      deviceId: res.device.deviceId,
+    });
     toast.success("Emulator created successfully");
   };
 
   const handleStop = async () => {
+    if (status === "stopped") {
+      toast.error("Emulator is already stopped");
+      return;
+    }
+    setError(null);
     const res = await emulatorDestroy();
+    if (res.status === "error") {
+      setError(res.message ?? "Failed to stop emulator");
+      return;
+    }
+    setStatus("stopped");
+    setSpeculos({
+      ...state.speculos,
+      status: false,
+      deviceId: '',
+    });
+    toast.success("Emulator stopped successfully");
+  };
+
+  const handleBtn = async (btnKey: string) => {
+    const res = await sendBtn(btnKey);
     if (res.status === "error") {
       setError(res.message);
       return;
     }
-    setError(null);
-    setStatus("stopped");
-    toast.success("Emulator stopped successfully");
   };
 
   useEffect(() => {
@@ -104,13 +130,22 @@ export default function Speculos() {
               className="w-full"
             />
             <div className="flex justify-center gap-2">
-              <Button className="bg-teal-500/100 font-bold">
+              <Button
+                className="bg-teal-500/100 font-bold"
+                onClick={() => handleBtn(BtnKey.LEFT)}
+              >
                 <CircleChevronLeft /> Left
               </Button>
-              <Button className="bg-amber-500/100 font-bold">
+              <Button
+                className="bg-amber-500/100 font-bold"
+                onClick={() => handleBtn(BtnKey.BOTH)}
+              >
                 <CircleDot /> Both
               </Button>
-              <Button className="bg-sky-500/100 font-bold">
+              <Button
+                className="bg-sky-500/100 font-bold"
+                onClick={() => handleBtn(BtnKey.RIGHT)}
+              >
                 Right <CircleChevronRight />
               </Button>
             </div>
