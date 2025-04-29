@@ -2,7 +2,7 @@ import {
   createSpeculosDevice,
   DeviceModelId,
 } from "@ledgerhq/speculos-transport";
-import cleanSpeculos from '@/libs/cleanSpeculos';
+import cleanSpeculos from '@/lib/cleanSpeculos';
 
 const defaultSeed = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
 const defaultModel = DeviceModelId.nanoS;
