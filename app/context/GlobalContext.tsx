@@ -15,6 +15,7 @@ export enum DeviceModel {
 
 export interface SpeculosEmulator {
   status: boolean;
+  deviceId: string;
   model: DeviceModel | null;
   appName: string;
   appVersion: string;
@@ -34,6 +35,7 @@ export interface LedgerHQEmulator {
 interface GlobalState {
   device: DeviceType;
   speculos: SpeculosEmulator;
+  ledgerHQ: LedgerHQEmulator;
 }
 
 interface GlobalContextType {
@@ -47,10 +49,11 @@ const defaultState: GlobalState = {
   device: DeviceType.Speculos,
   speculos: {
     status: false,
+    deviceId: '',
     model: DeviceModel.nanoS,
     appName: 'Tron',
     appVersion: '0.7.0',
-    coinAppsPath: './bin',
+    coinapps: './bin',
     firmware: '2.0',
     overridesAppPath: 'nanoS/app.elf',
     seed: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
