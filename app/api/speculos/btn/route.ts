@@ -12,10 +12,12 @@ export async function POST(request: Request) {
   const data = await request.json();
   const button = data.btn;
   const deviceId = data.deviceId;
+  console.log('data:', data);
   if (!btnVal.includes(button)) {
     return Response.json({'status': 'error', 'message': 'Invalid button value'});
   }
   const device = getMemorySpeculosDeviceInternal(deviceId);
+  console.log('device:', device);
   if (!device) {
     return Response.json({'status': 'error', 'message': 'Device not found'});
   }

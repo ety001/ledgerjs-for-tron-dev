@@ -2,9 +2,21 @@ import {
   getMemorySpeculosDeviceInternal,
 } from "@ledgerhq/speculos-transport";
 
-export async function GET() {
-  const timestamp = Date.now();
-  const device = getMemorySpeculosDeviceInternal('speculosID-1');
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const force = url.searchParams.get('force');
+  const deviceId = url.searchParams.get('deviceId');
+  const timestamp = force || Date.now().toString();
+
+  console.log('Force value:', force);
+  console.log('Using timestamp:', timestamp);
+  console.log('Device ID:', deviceId);
+
+  if (!deviceId) {
+    return Response.json({'status': 'error', 'msg': 'Device ID is required'});
+  }
+
+  const device = getMemorySpeculosDeviceInternal(deviceId);
   if (!device) {
     return Response.json({'status': 'error', 'msg': 'Device not found'});
   }

@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useEffect } from "react";
 import {
   Alert,
@@ -31,8 +31,11 @@ import { emulatorCreate, emulatorDestroy, sendBtn, BtnKey } from "@/lib/client";
 
 export default function Speculos() {
   const [status, setStatus] = useState<"running" | "stopped">("stopped");
+  const [timestamp, setTimestamp] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
-  const { state, setSpeculos } = useGlobal();
+  const [eventLog, setEventLog] = useState<string>("");
+  const {state, setSpeculos} = useGlobal();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const handleStart = async () => {
     if (status === "running") {
@@ -42,7 +45,11 @@ export default function Speculos() {
     setError(null);
     const res = await emulatorCreate(state.speculos);
     if (res.status === "error") {
-      setError(res.message);
+      setError(res.msg ?? "Failed to create emulator");
+      return;
+    }
+    if (!res.device) {
+      setError("Failed to create emulator");
       return;
     }
     setStatus("running");
@@ -51,6 +58,7 @@ export default function Speculos() {
       status: true,
       deviceId: res.device.deviceId,
     });
+    setTimestamp(Date.now().toString());
     toast.success("Emulator created successfully");
   };
 
@@ -62,7 +70,7 @@ export default function Speculos() {
     setError(null);
     const res = await emulatorDestroy();
     if (res.status === "error") {
-      setError(res.message ?? "Failed to stop emulator");
+      setError(res.msg ?? "Failed to stop emulator");
       return;
     }
     setStatus("stopped");
@@ -75,15 +83,33 @@ export default function Speculos() {
   };
 
   const handleBtn = async (btnKey: string) => {
-    const res = await sendBtn(btnKey);
+    const res = await sendBtn(state.speculos.deviceId, btnKey);
     if (res.status === "error") {
-      setError(res.message);
+      setError(res.msg ?? "Failed to press button");
       return;
     }
+    setTimestamp(Date.now().toString());
   };
 
   useEffect(() => {
-  }, []);
+    // if (status === "running") {
+    //   const eventStream = new EventSource(`/api/speculos/event_stream/${state.speculos.deviceId}`);
+    //   
+    //   eventStream.onmessage = (event) => {
+    //     const data = JSON.parse(event.data);
+    //     const logEntry = `${new Date().toLocaleTimeString()} - ${JSON.stringify(data)}\n`;
+    //     setEventLog(prev => prev + logEntry);
+    //     
+    //     if (textareaRef.current) {
+    //       textareaRef.current.scrollTop = textareaRef.current.scrollHeight;
+    //     }
+    //   };
+
+    //   return () => {
+    //     eventStream.close();
+    //   };
+    // }
+  }, [status, state.speculos.deviceId]);
 
   return (
     <Card className="shadow-md">
@@ -125,7 +151,7 @@ export default function Speculos() {
         <CardContent>
           <div className="flex flex-col gap-4">
             <img
-              src="/api/speculos/screenshot"
+              src={`/api/speculos/screenshot?force=${timestamp}&deviceId=${state.speculos.deviceId}`}
               alt="Speculos"
               className="w-full"
             />
@@ -150,11 +176,13 @@ export default function Speculos() {
               </Button>
             </div>
             <div className="grid w-full gap-1.5">
-              <Label htmlFor="message-2">Event Log</Label>
+              <Label htmlFor="eventlog">Event Log</Label>
               <Textarea
-                className="h-48"
-                placeholder="Waiting for event log..."
-                disabled
+                ref={textareaRef}
+                id="eventlog"
+                value={eventLog}
+                className="h-48 font-mono text-sm"
+                readOnly
               />
             </div>
           </div>

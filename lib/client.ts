@@ -4,26 +4,34 @@ import { SpeculosEmulator } from "@/app/context/GlobalContext";
 
 export interface EmulatorCreateResponse {
   status: "success" | "error";
-  message: string;
+  msg: string | undefined;
   device: {
     deviceId: string;
     ports: {
       http: number;
       ws: number;
     };
-  };
+  } | undefined;
 };
 
 export interface EmulatorDestroyResponse {
   status: "success" | "error";
-  instances: string[];
+  msg: string | undefined;
+  instances: string[] | undefined;
+};
+
+export enum BtnKey {
+  LEFT = 'left',
+  RIGHT = 'right',
+  BOTH = 'both',
 };
 
 export async function emulatorCreate(deviceSettings: SpeculosEmulator): Promise<EmulatorCreateResponse> {
-  if (deviceSettings.status === "running") {
+  if (deviceSettings.status) {
     return {
       status: "error",
-      message: "Emulator is already running",
+      msg: "Emulator is already running",
+      device: undefined,
     };
   }
 
@@ -41,7 +49,8 @@ export async function emulatorCreate(deviceSettings: SpeculosEmulator): Promise<
     if (!res.ok) {
       return {
         status: "error",
-        message: "Failed to create emulator",
+        msg: "Failed to create emulator",
+        device: undefined,
       };
     }
 
@@ -50,7 +59,8 @@ export async function emulatorCreate(deviceSettings: SpeculosEmulator): Promise<
     console.error('Error:', error);
     return {
       status: "error",
-      message: "Failed to create emulator",
+      msg: "Failed to create emulator",
+      device: undefined,
     };
   }
 }
@@ -63,7 +73,38 @@ export async function emulatorDestroy(): Promise<EmulatorDestroyResponse> {
     console.error('Error:', error);
     return {
       status: "error",
-      message: "Failed to destroy emulator",
+      msg: "Failed to destroy emulator",
+      instances: undefined,
+    };
+  }
+}
+
+export interface BtnResponse {
+  status: "success" | "error";
+  msg: string | undefined;
+};
+
+export async function sendBtn(deviceId: string, btnKey: string): Promise<BtnResponse> {
+  if (!Object.values(BtnKey).includes(btnKey as BtnKey)) {
+    return {
+      status: "error",
+      msg: "Invalid button key",
+    };
+  }
+  try {
+    const res = await fetch(`/api/speculos/btn`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ deviceId, btn: btnKey }),
+    });
+    return res.json();
+  } catch (error) {
+    console.error('Error:', error);
+    return {
+      status: "error",
+      msg: "Failed to press button",
     };
   }
 }
