@@ -2,8 +2,13 @@ import {
   getMemorySpeculosDeviceInternal,
 } from "@ledgerhq/speculos-transport";
 
-export async function GET(request: Request) {
-  const device = getMemorySpeculosDeviceInternal('speculosID-1');
+export async function GET({
+  params,
+}: {
+  params: Promise<{ deviceId: string }>
+}, request: Request) {
+  const deviceId = (await params).deviceId;
+  const device = getMemorySpeculosDeviceInternal(deviceId);
   if (!device) {
     return Response.json({'status': 'error', 'msg': 'Device not found'});
   }

@@ -10,11 +10,12 @@ const opList = [
 
 export async function POST(request: Request) {
   const data = await request.json();
+  const deviceId = data.deviceId;
   const opType = data.opType;
   if (!opList.includes(opType)) {
     return Response.json({'status': 'error', 'msg': 'Invalid operation type'});
   }
-  const device = getMemorySpeculosDeviceInternal('speculosID-1');
+  const device = getMemorySpeculosDeviceInternal(deviceId);
   if (!device) {
     return Response.json({'status': 'error', 'msg': 'Device not found'});
   }

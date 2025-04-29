@@ -11,15 +11,16 @@ const btnVal = [
 export async function POST(request: Request) {
   const data = await request.json();
   const button = data.btn;
+  const deviceId = data.deviceId;
   if (!btnVal.includes(button)) {
-    return Response.json({'status': 'error', 'msg': 'Invalid button value'});
+    return Response.json({'status': 'error', 'message': 'Invalid button value'});
   }
-  const device = getMemorySpeculosDeviceInternal('speculosID-1');
+  const device = getMemorySpeculosDeviceInternal(deviceId);
   if (!device) {
-    return Response.json({'status': 'error', 'msg': 'Device not found'});
+    return Response.json({'status': 'error', 'message': 'Device not found'});
   }
   const transport = device.transport;
   const btnRes = await transport.button(button);
   console.log('btnRes:', btnRes);
-  return Response.json({'status': 'success', 'msg': btnRes});
+  return Response.json({'status': 'success', 'message': btnRes});
 }
