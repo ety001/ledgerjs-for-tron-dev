@@ -1,11 +1,12 @@
 import {
   getMemorySpeculosDeviceInternal,
 } from "@ledgerhq/speculos-transport";
+import { type NextRequest } from 'next/server';
 
-export async function GET(request: Request) {
-  const url = new URL(request.url);
-  const force = url.searchParams.get('force');
-  const deviceId = url.searchParams.get('deviceId');
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const force = searchParams.get('force');
+  const deviceId = searchParams.get('deviceId');
   const timestamp = force || Date.now().toString();
 
   console.log('Force value:', force);

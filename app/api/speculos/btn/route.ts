@@ -17,7 +17,6 @@ export async function POST(request: Request) {
     return Response.json({'status': 'error', 'message': 'Invalid button value'});
   }
   const device = getMemorySpeculosDeviceInternal(deviceId);
-  console.log('device:', device);
   if (!device) {
     return Response.json({'status': 'error', 'message': 'Device not found'});
   }

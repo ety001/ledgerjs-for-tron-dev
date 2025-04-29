@@ -92,24 +92,23 @@ export default function Speculos() {
   };
 
   useEffect(() => {
-    // if (status === "running") {
-    //   const eventStream = new EventSource(`/api/speculos/event_stream/${state.speculos.deviceId}`);
-    //   
-    //   eventStream.onmessage = (event) => {
-    //     const data = JSON.parse(event.data);
-    //     const logEntry = `${new Date().toLocaleTimeString()} - ${JSON.stringify(data)}\n`;
-    //     setEventLog(prev => prev + logEntry);
-    //     
-    //     if (textareaRef.current) {
-    //       textareaRef.current.scrollTop = textareaRef.current.scrollHeight;
-    //     }
-    //   };
+    if (status === "running") {
+      const eventStream = new EventSource(`/api/speculos/event_stream/${state.speculos.deviceId}`);
+      
+      eventStream.onmessage = (event) => {
+        const logEntry = `${event.data}\n`;
+        setEventLog(prev => prev + logEntry);
+        
+        if (textareaRef.current) {
+          textareaRef.current.scrollTop = textareaRef.current.scrollHeight;
+        }
+      };
 
-    //   return () => {
-    //     eventStream.close();
-    //   };
-    // }
-  }, [status, state.speculos.deviceId]);
+      return () => {
+        eventStream.close();
+      };
+    }
+  }, [status, state.speculos.deviceId, timestamp]);
 
   return (
     <Card className="shadow-md">
