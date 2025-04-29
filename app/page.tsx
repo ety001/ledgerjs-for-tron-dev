@@ -4,8 +4,26 @@ import SignTIP712Message from "@/components/signTIP712Message";
 import Speculos from "@/components/speculos";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SceneSelector from "@/components/sceneSelector";
+import { useGlobal } from "@/app/context/GlobalContext";
 
 export default function Home() {
+  const { state, connectWallet, disconnectWallet, updateNetwork } = useGlobal();
+
+  const handleConnect = () => {
+    // 使用抽离的函数更新状态
+    connectWallet("0x1234567890abcdef", "testnet");
+  };
+
+  const handleDisconnect = () => {
+    // 使用抽离的函数更新状态
+    disconnectWallet();
+  };
+
+  const handleNetworkChange = (network: string) => {
+    // 使用抽离的函数更新状态
+    updateNetwork(network);
+  };
+
   return (
     <main className="container mx-auto p-4">
       <div className="mb-4">
