@@ -92,12 +92,17 @@ export default function Speculos() {
   };
 
   useEffect(() => {
+    setStatus(state.speculos.status ? "running" : "stopped");
+  }, []);
+
+  useEffect(() => {
     if (status === "running") {
       const eventStream = new EventSource(`/api/speculos/event_stream/${state.speculos.deviceId}`);
       
       eventStream.onmessage = (event) => {
         const logEntry = `${event.data}\n`;
         setEventLog(prev => prev + logEntry);
+        setTimestamp(Date.now().toString());
         
         if (textareaRef.current) {
           textareaRef.current.scrollTop = textareaRef.current.scrollHeight;
