@@ -10,14 +10,8 @@ import { useGlobal, DeviceType } from "@/app/context/GlobalContext";
 export default function Home() {
   const { state, setDevice } = useGlobal();
 
-  const handleTabChange = (value: string) => {
-    if (value === "speculos") {
-      setDevice(DeviceType.Speculos);
-    } else if (value === "tronLink") {
-      setDevice(DeviceType.TronLink);
-    } else if (value === "ledgerHardware") {
-      setDevice(DeviceType.LedgerHQ);
-    }
+  const handleTabChange = (device: DeviceType) => {
+    setDevice(device);
   };
 
   return (
@@ -30,7 +24,7 @@ export default function Home() {
           <Tabs 
             defaultValue={state.device} 
             className="w-auto"
-            onValueChange={handleTabChange}
+            onValueChange={(value) => handleTabChange(value as DeviceType)}
           >
             <TabsList>
               <TabsTrigger value={DeviceType.Speculos}>Speculos</TabsTrigger>

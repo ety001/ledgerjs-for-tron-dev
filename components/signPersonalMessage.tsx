@@ -1,13 +1,17 @@
 "use client";
 
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { CircleChevronLeft, CircleChevronRight, CircleDot } from "lucide-react";
 import { useState } from "react";
+import { useGlobal } from "@/app/context/GlobalContext";
 
 export default function SignPersonalMessage() {
   const [status, setStatus] = useState<"running" | "stopped">("stopped");
+  const { state } = useGlobal();
+
+  const handleStart = () => {
+    console.log("Current device:", state.device);
+  };
 
   return (
     <Card className="shadow-md">
@@ -21,7 +25,9 @@ export default function SignPersonalMessage() {
       </CardHeader>
       {status === "stopped" && (
         <CardContent>
-          hi
+          <Button
+            onClick={handleStart}
+          >Start</Button>
         </CardContent>
       )}
     </Card>
