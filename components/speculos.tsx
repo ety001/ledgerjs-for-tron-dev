@@ -28,12 +28,14 @@ import { useGlobal } from "@/app/context/GlobalContext";
 import SpeculosSettings from "@/components/speculosSettings";
 import { toast } from "sonner";
 import { emulatorCreate, emulatorDestroy, sendBtn, BtnKey } from "@/lib/client";
+import Loading from "@/components/loading";
 
 export default function Speculos() {
   const [status, setStatus] = useState<"running" | "stopped">("stopped");
   const [timestamp, setTimestamp] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [eventLog, setEventLog] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
   const {state, setSpeculos} = useGlobal();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -43,6 +45,7 @@ export default function Speculos() {
       return;
     }
     setError(null);
+    setLoading(true);
     const res = await emulatorCreate(state.speculos);
     if (res.status === "error") {
       setError(res.msg ?? "Failed to create emulator");
@@ -53,6 +56,7 @@ export default function Speculos() {
       return;
     }
     setStatus("running");
+    setLoading(false);
     setSpeculos({
       ...state.speculos,
       status: true,
@@ -149,6 +153,11 @@ export default function Speculos() {
               {error}
             </AlertDescription>
           </Alert>
+        </CardContent>
+      )}
+      {loading && (
+        <CardContent>
+          <Loading />
         </CardContent>
       )}
       {status === "running" && (
