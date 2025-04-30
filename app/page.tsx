@@ -1,9 +1,8 @@
 "use client";
 
 import LedgerHardware from "@/components/ledgerHardware";
-import SignPersonalMessage from "@/components/signPersonalMessage";
-import SignTIP712Message from "@/components/signTIP712Message";
 import Speculos from "@/components/speculos";
+import TronLink from "@/components/tronLink";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import SceneSelector from "@/components/sceneSelector";
 import { useGlobal, DeviceType } from "@/app/context/GlobalContext";
@@ -14,6 +13,8 @@ export default function Home() {
   const handleTabChange = (value: string) => {
     if (value === "speculos") {
       setDevice(DeviceType.Speculos);
+    } else if (value === "tronLink") {
+      setDevice(DeviceType.TronLink);
     } else if (value === "ledgerHardware") {
       setDevice(DeviceType.LedgerHQ);
     }
@@ -27,18 +28,22 @@ export default function Home() {
       <div className="grid grid-cols-1 lg:grid-cols-8 gap-4">
         <div className="col-span-3">
           <Tabs 
-            defaultValue={state.device === DeviceType.Speculos ? "speculos" : "ledgerHardware"} 
+            defaultValue={state.device} 
             className="w-auto"
             onValueChange={handleTabChange}
           >
             <TabsList>
-              <TabsTrigger value="speculos">Speculos</TabsTrigger>
-              <TabsTrigger value="ledgerHardware">Ledger Hardware</TabsTrigger>
+              <TabsTrigger value={DeviceType.Speculos}>Speculos</TabsTrigger>
+              <TabsTrigger value={DeviceType.TronLink}>TronLink</TabsTrigger>
+              <TabsTrigger value={DeviceType.LedgerHQ}>Ledger Hardware</TabsTrigger>
             </TabsList>
-            <TabsContent value="speculos">
+            <TabsContent value={DeviceType.Speculos}>
               <Speculos />
             </TabsContent>
-            <TabsContent value="ledgerHardware">
+            <TabsContent value={DeviceType.TronLink}>
+              <TronLink />
+            </TabsContent>
+            <TabsContent value={DeviceType.LedgerHQ}>
               <LedgerHardware />
             </TabsContent>
           </Tabs>

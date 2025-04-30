@@ -4,7 +4,8 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export enum DeviceType {
   Speculos = 'speculos',
-  LedgerHQ = 'ledgerhq'
+  LedgerHQ = 'ledgerhq',
+  TronLink = 'tronlink',
 }
 
 export enum DeviceModel {

@@ -18,8 +18,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import SignPersonalMessage from "@/components/signPersonalMessage";
+import SignTIP712Message from "@/components/signTIP712Message";
 
-const frameworks = [
+const testScenes = [
   {
     value: "signPersonalMessage",
     label: "Sign Personal Message",
@@ -35,48 +37,52 @@ export default function SceneSelector() {
   const [value, setValue] = React.useState("")
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-[200px] justify-between"
-        >
-          {value
-            ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select What to Test"}
-          <ChevronsUpDown className="opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" />
-          <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
-            <CommandGroup>
-              {frameworks.map((framework) => (
-                <CommandItem
-                  key={framework.value}
-                  value={framework.value}
-                  onSelect={(currentValue) => {
-                    setValue(currentValue === value ? "" : currentValue)
-                    setOpen(false)
-                  }}
-                >
-                  {framework.label}
-                  <Check
-                    className={cn(
-                      "ml-auto",
-                      value === framework.value ? "opacity-100" : "opacity-0"
-                    )}
-                  />
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+    <div className="flex flex-col gap-4">
+      <Popover open={open} onOpenChange={setOpen}>
+        <PopoverTrigger asChild>
+          <Button
+            variant="outline"
+            role="combobox"
+            aria-expanded={open}
+            className="w-[200px] justify-between"
+          >
+            {value
+              ? testScenes.find((scene) => scene.value === value)?.label
+              : "Select What to Test"}
+            <ChevronsUpDown className="opacity-50" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-[200px] p-0">
+          <Command>
+            <CommandInput placeholder="Search ..." className="h-9" />
+            <CommandList>
+              <CommandEmpty>No scene found.</CommandEmpty>
+              <CommandGroup>
+                {testScenes.map((scene) => (
+                  <CommandItem
+                    key={scene.value}
+                    value={scene.value}
+                    onSelect={(currentValue) => {
+                      setValue(currentValue === value ? "" : currentValue)
+                      setOpen(false)
+                    }}
+                  >
+                    {scene.label}
+                    <Check
+                      className={cn(
+                        "ml-auto",
+                        value === scene.value ? "opacity-100" : "opacity-0"
+                      )}
+                    />
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </PopoverContent>
+      </Popover>
+      {value === "signPersonalMessage" && <SignPersonalMessage />}
+      {value === "signTIP712Message" && <SignTIP712Message />}
+    </div>
   )
 }
