@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <main className="container mx-auto p-4">
       <div className="mb-4">
-        <p className="text-2xl font-bold">LedgerJS for Tron Developer Tool</p>
+        <p className="text-2xl font-bold">LedgerJS Developer Tool for Tron</p>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-8 gap-4">
         <div className="col-span-3">

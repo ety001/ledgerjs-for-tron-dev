@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "LedgerJS for Tron Developer Tool",
+  title: "LedgerJS Developer Tool for Tron",
   description: "A tool for developers to test and develop with LedgerJS for Tron",
 };
 
