@@ -108,3 +108,29 @@ export async function sendBtn(deviceId: string, btnKey: string): Promise<BtnResp
     };
   }
 }
+
+export interface TransportResponse {
+  status: "success" | "error";
+  msg: string | undefined;
+  signedMsg: string | undefined;
+  address: string | undefined;
+};
+
+export async function transport(deviceId: string, opType: string, opData: any): Promise<TransportResponse> {
+  try {
+    const res = await fetch(`/api/speculos/transport`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ deviceId, opType, opData }),
+    });
+    return res.json();
+  } catch (error) {
+    console.error('Error:', error);
+    return {
+      status: "error",
+      msg: "Failed to create transport",
+    };
+  }
+}

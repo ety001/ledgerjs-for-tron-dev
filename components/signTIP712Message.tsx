@@ -8,9 +8,16 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { useGlobal } from "@/app/context/GlobalContext";
 
 export default function SignTIP712Message() {
   const [status, setStatus] = useState<"running" | "stopped">("stopped");
+  const { state } = useGlobal();
+
+  const handleStart = () => {
+    console.log("Current device:", state.device);
+  };
 
   return (
     <Card className="shadow-md">
@@ -24,7 +31,9 @@ export default function SignTIP712Message() {
       </CardHeader>
       {status === "stopped" && (
         <CardContent>
-          hi
+          <Button
+            onClick={handleStart}
+          >Start</Button>
         </CardContent>
       )}
     </Card>

@@ -27,11 +27,13 @@ export default function TronLink() {
   useEffect(() => {
     tron = window.tron;
     if (!tron) {
-      throw new Error("Tron not found");
+      setError("Tron not found");
+      return;
     }
     tronWeb = tron.tronWeb as TronWeb;
     if (!tronWeb) {
-      throw new Error("TronWeb not found");
+      setError("TronWeb not found");
+      return;
     }
   }, []);
 

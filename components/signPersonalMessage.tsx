@@ -1,35 +1,129 @@
 "use client";
 
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Form,
+  FormField,
+  FormControl,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { toast } from "sonner";
+import { Terminal } from "lucide-react";
 import { useGlobal } from "@/app/context/GlobalContext";
+import { TronLinkAdapter } from "@tronweb3/tronwallet-adapter-tronlink";
+import { transport } from "@/lib/client";
 
 export default function SignPersonalMessage() {
   const [status, setStatus] = useState<"running" | "stopped">("stopped");
+  const [result, setResult] = useState<string>("");
   const { state } = useGlobal();
+  const formSchema = z.object({
+    message: z.string({
+      required_error: 'Message is required',
+    }).trim(),
+  }).required();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+  });
+ 
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    switch (state.device) {
+      case 'speculos':
+        if (state.speculos.deviceId === '') {
+          toast.error('Please start speculos first.');
+          return;
+        }
+        const res = await transport(state.speculos.deviceId, 'signPersonalMessage', {
+          path: "44'/195'/0'/0/0",
+          message: values.message,
+        });
+        if (res.status === 'error') {
+          toast.error(res.msg ?? 'Failed to sign message');
+          return;
+        }
+        setResult(res.signedMsg ?? '');
+        break;
+    }
+  }
 
-  const handleStart = () => {
-    console.log("Current device:", state.device);
-  };
+  
+  const signByTronLink = async (msg: string) => {
+    try {
+      const adapter = new TronLinkAdapter();
+      await adapter.connect();
+      const signed = await adapter.signMessage(msg);
+      console.log("Signed:", signed);
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setStatus("stopped");
+    }
+  }
 
   return (
     <Card className="shadow-md">
       <CardHeader>
-        <CardTitle className="flex flex-row gap-2">
+        <CardTitle>
           Sign Personal Message
         </CardTitle>
-        <CardDescription className="flex flex-row gap-2">
+        <CardDescription>
           Sign Personal Message
         </CardDescription>
       </CardHeader>
-      {status === "stopped" && (
-        <CardContent>
-          <Button
-            onClick={handleStart}
-          >Start</Button>
-        </CardContent>
-      )}
+      <CardContent className="flex flex-col gap-4">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="message"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Message</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="The message you want to sign."
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">Submit</Button>
+          </form>
+        </Form>
+        {result !== '' &&
+        (<Alert>
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Result</AlertTitle>
+          <AlertDescription>
+            <Textarea
+              value={result}
+              readOnly
+              rows={5}
+            />
+          </AlertDescription>
+        </Alert>)}
+      </CardContent>
     </Card>
   );
 }
