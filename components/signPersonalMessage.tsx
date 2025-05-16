@@ -33,7 +33,6 @@ import { TronLinkAdapter } from "@tronweb3/tronwallet-adapter-tronlink";
 import { transport } from "@/lib/client";
 
 export default function SignPersonalMessage() {
-  const [status, setStatus] = useState<"running" | "stopped">("stopped");
   const [result, setResult] = useState<string>("");
   const { state } = useGlobal();
   const formSchema = z.object({
@@ -46,6 +45,7 @@ export default function SignPersonalMessage() {
   });
  
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values, state);
     switch (state.device) {
       case 'speculos':
         if (state.speculos.deviceId === '') {
@@ -60,7 +60,13 @@ export default function SignPersonalMessage() {
           toast.error(res.msg ?? 'Failed to sign message');
           return;
         }
+        if (res.signedMsg !== '') {
+          setResult(`${res.signedMsg}\n\n${result}`)
+        }
         setResult(res.signedMsg ?? '');
+        break;
+      case 'tronlink':
+        await signByTronLink(values.message);
         break;
     }
   }
@@ -71,11 +77,10 @@ export default function SignPersonalMessage() {
       const adapter = new TronLinkAdapter();
       await adapter.connect();
       const signed = await adapter.signMessage(msg);
+      setResult(`${signed}\n\n${result}`);
       console.log("Signed:", signed);
     } catch (error) {
       console.error("Error:", error);
-    } finally {
-      setStatus("stopped");
     }
   }
 
