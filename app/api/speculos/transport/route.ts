@@ -6,6 +6,7 @@ import Trx from '@ledgerhq/hw-app-trx';
 
 const opList = [
   'signPersonalMessage',
+  'signTIP712Message',
 ];
 
 export async function POST(request: Request) {
@@ -21,10 +22,22 @@ export async function POST(request: Request) {
   }
   const opData = data.opData;
   switch (opType) {
-    case 'signPersonalMessage':
-      const path = opData.path || "44'/195'/0'/0/0"; // Default path if not provided
-      const msg = opData.message || 'hello world'; // Default message if not provided
-      return await signPersonalMessage(device, path, msg);
+    case 'signPersonalMessage': {
+      const personalPath = opData.path || "44'/195'/0'/0/0"; // Default path if not provided
+      if (opData.message === undefined) {
+        return Response.json({'status': 'error', 'msg': 'Message is required for personal message signing'});
+      }
+      const personalMsg = opData.message;
+      return await signPersonalMessage(device, personalPath, personalMsg);
+    }
+    case 'signTIP712Message': {
+      const tip712Path = opData.path || "44'/195'/0'/0/0"; // Default path if not provided
+      if (opData.message === undefined) {
+        return Response.json({'status': 'error', 'msg': 'Message is required for TIP712 signing'});
+      }
+      const tip712Msg = opData.message;
+      return await signTIP712Message(device, tip712Path, tip712Msg);
+    }
     default:
       return Response.json({'status': 'error', 'msg': 'Operation not supported'});
   }
@@ -38,5 +51,16 @@ async function signPersonalMessage(device: SpeculosDeviceInternal, path: string,
   const address = await app.getAddress(path);
   console.log(address);
   const signedMsg = await app.signPersonalMessage(path, message);
+  return Response.json({'status': 'success', 'signedMsg': signedMsg, 'address': address});
+}
+
+async function signTIP712Message(device: SpeculosDeviceInternal, path: string, message: string) {
+  const transport = device.transport;
+  const app = new Trx(transport);
+  const appConfig = await app.getAppConfiguration();
+  console.log(appConfig);
+  const address = await app.getAddress(path);
+  console.log(address);
+  const signedMsg = await app.signTIP712Message(path, message);
   return Response.json({'status': 'success', 'signedMsg': signedMsg, 'address': address});
 }

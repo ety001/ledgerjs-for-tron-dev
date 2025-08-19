@@ -131,6 +131,8 @@ export async function transport(deviceId: string, opType: string, opData: any): 
     return {
       status: "error",
       msg: "Failed to create transport",
+      signedMsg: undefined,
+      address: undefined,
     };
   }
 }
