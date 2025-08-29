@@ -42,7 +42,7 @@ yarn-error.log*
 next-env.d.ts
 
 # bin
-bin/*
+#bin/*
 !bin/.gitkeep
 
-hw-app-trx
+#hw-app-trx
