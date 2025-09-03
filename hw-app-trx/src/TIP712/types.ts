@@ -61,25 +61,6 @@ export type CALServiceTIP712Response = {
   };
 }[];
 
-export type StructImplemData = Required<
-  | {
-      structType: "root";
-      value: string;
-    }
-  | {
-      structType: "array";
-      value: number;
-    }
-  | {
-      structType: "field";
-      value: Required<{
-        data: unknown;
-        type: string;
-        sizeInBits: number | undefined;
-      }>;
-    }
->;
-
 export type StructDefData = Required<
   | {
       structType: "name";
@@ -90,6 +71,12 @@ export type StructDefData = Required<
       value: Buffer;
     }
 >;
+
+export type FilteringInfoContractName = {
+  displayName: string;
+  sig: string;
+  filtersCount: number;
+};
 
 export type FilteringInfoShowField = {
   displayName: string;
@@ -117,8 +104,21 @@ export type FilteringInfoDiscardField = {
   path: string;
 };
 
-export type FilteringInfoContractName = {
-  displayName: string;
-  sig: string;
-  filtersCount: number;
-};
+export type StructImplemData = Required<
+  | {
+      structType: "root";
+      value: string;
+    }
+  | {
+      structType: "array";
+      value: number;
+    }
+  | {
+      structType: "field";
+      value: Required<{
+        data: unknown;
+        type: string;
+        sizeInBits: number | undefined;
+      }>;
+    }
+>;

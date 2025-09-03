@@ -4,38 +4,28 @@ import type {
   TIP712Message,
   TIP712MessageTypes,
   TIP712MessageTypesEntry,
-  StructImplemData,
   StructDefData,
   FilteringInfoContractName,
   FilteringInfoShowField,
+  FilteringInfoDiscardField,
+  StructImplemData,
   MessageFilters,
 } from "./types";
 import { LoadConfig } from "../services/types";
+import { byContractAddressAndChainId, findERC20SignaturesInfo } from "../services/trc20";
 import { getLoadConfig } from "../services/loadConfig";
 import {
   getFiltersForMessage,
   sortObjectAlphabetically,
   getCoinRefTokensMap,
   makeTypeEntryStructBuffer,
-  getFilterDisplayNameAndSigBuffers,
   intAsHexBytes,
+  getFilterDisplayNameAndSigBuffers,
   getPayloadForFilterV2,
+  TIP712_TYPE_ENCODERS,
   destructTypeFromString,
   TIP712_TYPE_PROPERTIES,
-  TIP712_TYPE_ENCODERS,
 } from "./utils";
-import { findTRC20SignaturesInfo, byContractAddressAndChainId } from "../services/ledger";
-
-type MakeRecursiveFieldStructImplemParams = {
-  transport: Transport;
-  loadConfig: LoadConfig;
-  chainId: number;
-  erc20SignaturesBlob: string | null | undefined;
-  types: TIP712MessageTypes;
-  filters: MessageFilters | undefined;
-  shouldUseV1Filters: boolean;
-  coinRefsTokensMap: Record<number, { token: string; coinRefMemorySlot?: number }>;
-};
 
 const CLA = 0xe0;
 
@@ -64,6 +54,136 @@ export const signTIP712HashedMessage = (
   return transport.send(CLA, 0x0c, 0x00, 0x00, buffer).then(response => {
     return response.slice(0, 65).toString("hex");
   });
+};
+
+type MakeRecursiveFieldStructImplemParams = {
+  transport: Transport;
+  loadConfig: LoadConfig;
+  chainId: number;
+  erc20SignaturesBlob: string | null | undefined;
+  types: TIP712MessageTypes;
+  filters: MessageFilters | undefined;
+  shouldUseV1Filters: boolean;
+  shouldUseDiscardedFields: boolean;
+  coinRefsTokensMap: Record<number, { token: string; coinRefMemorySlot?: number }>;
+};
+
+/**
+ * @ignore for the README
+ *
+ * Factory to create the recursive function that will pass on each
+ * field level and APDUs to describe its struct implementation
+ *
+ * @param {Eth["sendStructImplem"]} sendStructImplem
+ * @param {EIP712MessageTypes} types
+ * @returns {void}
+ */
+const makeRecursiveFieldStructImplem = ({
+  transport,
+  loadConfig,
+  chainId,
+  erc20SignaturesBlob,
+  types,
+  filters,
+  shouldUseV1Filters,
+  shouldUseDiscardedFields,
+  coinRefsTokensMap,
+}: MakeRecursiveFieldStructImplemParams): ((
+  destructedType: ReturnType<typeof destructTypeFromString>,
+  data: unknown,
+  path?: string,
+) => Promise<void>) => {
+  const typesMap = {} as Record<string, Record<string, string>>;
+  for (const type in types) {
+    typesMap[type] = types[type]?.reduce((acc, curr) => ({ ...acc, [curr.name]: curr.type }), {});
+  }
+
+  // This recursion will call itself to handle each level of each field
+  // in order to send APDUs for each of them
+  const recursiveFieldStructImplem = async (
+    destructedType: ReturnType<typeof destructTypeFromString>,
+    data,
+    path = "",
+  ) => {
+    const [typeDescription, arrSizes] = destructedType;
+    const [currSize, ...restSizes] = arrSizes;
+    const isCustomType = !TIP712_TYPE_PROPERTIES[typeDescription?.name?.toUpperCase() || ""];
+
+    if (Array.isArray(data) && typeof currSize !== "undefined") {
+      await sendStructImplem(transport, {
+        structType: "array",
+        value: data.length,
+      });
+
+      const entryPath = `${path}.[]`;
+      if (!data.length) {
+        // If the array is empty and a filter exists, we need to let the app know that the filter can be discarded
+        const entryFilters = filters?.fields.filter(f => f.path.startsWith(entryPath));
+        if (entryFilters && shouldUseDiscardedFields) {
+          for (const entryFilter of entryFilters) {
+            await sendFilteringInfo(transport, "discardField", loadConfig, {
+              path: entryFilter.path,
+            });
+            await sendFilteringInfo(transport, "showField", loadConfig, {
+              displayName: entryFilter.label,
+              sig: entryFilter.signature,
+              format: entryFilter.format,
+              coinRef: entryFilter.coin_ref,
+              chainId,
+              erc20SignaturesBlob,
+              shouldUseV1Filters,
+              coinRefsTokensMap,
+              isDiscarded: true,
+            });
+          }
+        }
+      }
+      // If the array is not empty, we need to send the struct implementation for each entry
+      for (const entry of data) {
+        await recursiveFieldStructImplem([typeDescription, restSizes], entry, entryPath);
+      }
+    } else if (isCustomType) {
+      for (const fieldName of Object.keys(typesMap[typeDescription?.name || ""])) {
+        const fieldValue = data[fieldName];
+        const fieldType = typesMap[typeDescription?.name || ""]?.[fieldName];
+
+        if (fieldType) {
+          await recursiveFieldStructImplem(
+            destructTypeFromString(fieldType),
+            fieldValue,
+            `${path}.${fieldName}`,
+          );
+        }
+      }
+    } else {
+      const filter = filters?.fields.find(f => path === f.path);
+
+      if (filter) {
+        await sendFilteringInfo(transport, "showField", loadConfig, {
+          displayName: filter.label,
+          sig: filter.signature,
+          format: filter.format,
+          coinRef: filter.coin_ref,
+          chainId,
+          erc20SignaturesBlob,
+          shouldUseV1Filters,
+          coinRefsTokensMap,
+          isDiscarded: false,
+        });
+      }
+
+      await sendStructImplem(transport, {
+        structType: "field",
+        value: {
+          data,
+          type: typeDescription?.name || "",
+          sizeInBits: typeDescription?.size,
+        },
+      });
+    }
+  };
+
+  return recursiveFieldStructImplem;
 };
 
 /**
@@ -289,20 +409,18 @@ async function sendFilteringInfo(
         );
       }
 
+      enum PROVIDE_TOKEN_INFOS_APDU_FIELDS {
+        CLA = 0xe0,
+        INS = 0xca,
+        P1 = 0x00,
+        P2 = 0x00,
+      }
       const isTokenAddress = format === "token";
-      //if (isTokenAddress && coinRef !== undefined) {
-      if (coinRef !== undefined) {
+      if (isTokenAddress && coinRef !== undefined) {
         const { token, deviceTokenIndex } = coinRefsTokensMap[coinRef];
         if (deviceTokenIndex === undefined) {
           const payload = await byContractAddressAndChainId(token, chainId, erc20SignaturesBlob);
           if (payload) {
-            enum PROVIDE_TOKEN_INFOS_APDU_FIELDS {
-              CLA = 0xe0,
-              INS = 0xca,
-              P1 = 0x00,
-              P2 = 0x00,
-            }
-
             const response = await transport.send(
               PROVIDE_TOKEN_INFOS_APDU_FIELDS.CLA,
               PROVIDE_TOKEN_INFOS_APDU_FIELDS.INS,
@@ -312,9 +430,6 @@ async function sendFilteringInfo(
             );
             coinRefsTokensMap[coinRef].deviceTokenIndex = response[0];
           }
-        }
-        if (isTokenAddress) {
-          return;
         }
       }
 
@@ -328,10 +443,9 @@ async function sendFilteringInfo(
         const payload = await byContractAddressAndChainId(token, chainId, erc20SignaturesBlob);
 
         if (payload) {
-          await transport.send(0xe0, 0xca, 0x00, 0x00, payload.data);
+          await transport.send(0xe0, PROVIDE_TOKEN_INFOS_APDU_FIELDS.INS, 0x00, 0x00, payload.data);
           coinRefsTokensMap[255].deviceTokenIndex = 255;
         }
-        return;
       }
 
       if (!format) {
@@ -345,37 +459,20 @@ async function sendFilteringInfo(
         amount: APDU_FIELDS.P2_amount_join_value,
       };
 
-      if (displayName === "") {
-        const payload = getPayloadForFilterV2(
-          format,
-          coinRef,
-          coinRefsTokensMap,
-          Buffer.from(displayName),
-          sigBuffer,
-        );
-        return transport.send(
-          APDU_FIELDS.CLA,
-          APDU_FIELDS.INS,
-          isDiscarded ? APDU_FIELDS.P1_discarded : APDU_FIELDS.P1_standard,
-          P2FormatMap["token"],
-          payload,
-        );
-      } else {
-        const payload = getPayloadForFilterV2(
-          format,
-          coinRef,
-          coinRefsTokensMap,
-          displayNameBuffer,
-          sigBuffer,
-        );
-        return transport.send(
-          APDU_FIELDS.CLA,
-          APDU_FIELDS.INS,
-          isDiscarded ? APDU_FIELDS.P1_discarded : APDU_FIELDS.P1_standard,
-          P2FormatMap[format],
-          payload,
-        );
-      }
+      const payload = getPayloadForFilterV2(
+        format,
+        coinRef,
+        coinRefsTokensMap,
+        displayNameBuffer,
+        sigBuffer,
+      );
+      return transport.send(
+        APDU_FIELDS.CLA,
+        APDU_FIELDS.INS,
+        isDiscarded ? APDU_FIELDS.P1_discarded : APDU_FIELDS.P1_standard,
+        P2FormatMap[format],
+        payload,
+      );
     }
 
     case "discardField": {
@@ -398,116 +495,12 @@ async function sendFilteringInfo(
 /**
  * @ignore for the README
  *
- * Factory to create the recursive function that will pass on each
- * field level and APDUs to describe its struct implementation
- *
- * @param {Eth["sendStructImplem"]} sendStructImplem
- * @param {EIP712MessageTypes} types
- * @returns {void}
- */
-const makeRecursiveFieldStructImplem = ({
-  transport,
-  loadConfig,
-  chainId,
-  erc20SignaturesBlob,
-  types,
-  filters,
-  shouldUseV1Filters,
-  coinRefsTokensMap,
-}: MakeRecursiveFieldStructImplemParams): ((
-  destructedType: ReturnType<typeof destructTypeFromString>,
-  data: unknown,
-  path?: string,
-) => Promise<void>) => {
-  const typesMap = {} as Record<string, Record<string, string>>;
-  for (const type in types) {
-    typesMap[type] = types[type]?.reduce((acc, curr) => ({ ...acc, [curr.name]: curr.type }), {});
-  }
-
-  // This recursion will call itself to handle each level of each field
-  // in order to send APDUs for each of them
-  const recursiveFieldStructImplem = async (
-    destructedType: ReturnType<typeof destructTypeFromString>,
-    data,
-    path = "",
-  ) => {
-    const [typeDescription, arrSizes] = destructedType;
-    const [currSize, ...restSizes] = arrSizes;
-    const isCustomType = !TIP712_TYPE_PROPERTIES[typeDescription?.name?.toUpperCase() || ""];
-
-    if (Array.isArray(data) && typeof currSize !== "undefined") {
-      await sendStructImplem(transport, {
-        structType: "array",
-        value: data.length,
-      });
-      for (const entry of data) {
-        await recursiveFieldStructImplem([typeDescription, restSizes], entry, `${path}.[]`);
-      }
-    } else if (isCustomType) {
-      for (const [fieldName, fieldValue] of Object.entries(data as TIP712Message["message"])) {
-        const fieldType = typesMap[typeDescription?.name || ""]?.[fieldName];
-
-        if (fieldType) {
-          await recursiveFieldStructImplem(
-            destructTypeFromString(fieldType),
-            fieldValue,
-            `${path}.${fieldName}`,
-          );
-        }
-      }
-    } else {
-      //const filter = filters?.fields.find(f => path === f.path);
-      // TODO. Maybe "format":"token" and "format":"amount" with same path
-      const filterItems = filters?.fields.filter(f => path === f.path);
-      // Sort, let "format":"token" FIRST, then "format":"amount"
-      const sortedFilterItems = filterItems.sort((a, b) => {
-        if (a.format === "token" && b.format !== "token") return -1;
-        if (a.format !== "token" && b.format === "token") return 1;
-        return 0;
-      });
-      console.log("ZYD ### sortedFilterItems", sortedFilterItems);
-
-      //if (filter) {
-      for (const filter of sortedFilterItems) {
-        let displayName = filter.label || filter.path;
-        if (sortedFilterItems.length > 1 && filter.format === "amount") { //TODO. Ugly now.
-          displayName = "";
-        }
-        await sendFilteringInfo(transport, "showField", loadConfig, {
-          displayName: displayName,
-          sig: filter.signature,
-          format: filter.format,
-          coinRef: filter.coin_ref,
-          chainId,
-          erc20SignaturesBlob,
-          shouldUseV1Filters,
-          coinRefsTokensMap,
-        });
-      };
-
-      await sendStructImplem(transport, {
-        structType: "field",
-        value: {
-          data,
-          type: typeDescription?.name || "",
-          sizeInBits: typeDescription?.bits,
-        },
-      });
-    }
-  };
-
-  return recursiveFieldStructImplem;
-};
-
-/**
- * @ignore for the README
- *
- * Sign an EIP-721 formatted message following the specification here:
+ * Sign an TIP-721 formatted message following the specification here:
  * https://github.com/LedgerHQ/app-ethereum/blob/develop/doc/ethapp.asc#sign-eth-eip-712
  * @example
-  eth.signEIP721Message("44'/60'/0'/0/0", {
+  tronApp.signTIP721Message("44'/195'/0'/0/0", {
     domain: {
-      chainId: 69,
+      chainId: 1151668124,
       name: "Da Domain",
       verifyingContract: "0xCcCCccccCCCCcCCCCCCcCcCccCcCCCcCcccccccC",
       version: "1"
@@ -546,13 +539,13 @@ export const signTIP712Message = async (
     P2_v0 = 0x00,
     P2_full = 0x01,
   }
-  console.log("bbbbbb");
   const { primaryType, types: unsortedTypes, domain, message } = typedMessage;
   const { calServiceURL } = getLoadConfig(loadConfig);
   // Types are sorted by alphabetical order in order to get the same schema hash no matter the JSON format
   const types = sortObjectAlphabetically(unsortedTypes) as TIP712MessageTypes;
 
   const shouldUseV1Filters = false;
+  const shouldUseDiscardedFields = true;
   const filters = await getFiltersForMessage(typedMessage, shouldUseV1Filters, calServiceURL);
   const coinRefsTokensMap = getCoinRefTokensMap(filters, shouldUseV1Filters, typedMessage);
 
@@ -580,11 +573,9 @@ export const signTIP712Message = async (
     await sendFilteringInfo(transport, "activate", loadConfig);
   }
 
-  // const erc20SignaturesBlob = !shouldUseV1Filters
-  //   ? await findTRC20SignaturesInfo(loadConfig, domain.chainId || 0)
-  //   : undefined;
-
-  const erc20SignaturesBlob = "testErc20SignaturesBlobString";
+  const erc20SignaturesBlob = !shouldUseV1Filters
+    ? await findERC20SignaturesInfo(loadConfig, domain.chainId || 0)
+    : undefined;
 
   // Create the recursion that should pass on each entry
   // of the domain fields and primaryType fields
@@ -596,6 +587,7 @@ export const signTIP712Message = async (
     types,
     filters,
     shouldUseV1Filters,
+    shouldUseDiscardedFields,
     coinRefsTokensMap,
   });
 
@@ -616,7 +608,7 @@ export const signTIP712Message = async (
     const { contractName, fields } = filters;
     const contractNameInfos = {
       displayName: contractName.label,
-      filtersCount: fields.filter(f => f.format !== "token").length,
+      filtersCount: fields.length,
       sig: contractName.signature,
     };
     await sendFilteringInfo(transport, "contractName", loadConfig, contractNameInfos);

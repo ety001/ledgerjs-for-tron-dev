@@ -1,4 +1,5 @@
 
-> @ledgerhq/hw-app-trx@6.30.0 build /Users/sam/DEV/Test/ledger-live/libs/ledgerjs/packages/hw-app-trx
-> tsc && tsc -m ES6 --outDir lib-es
+
+> @ledgerhq/hw-app-trx@6.31.4 build /Users/lanyu/zyd/ledger/ledger-live/libs/ledgerjs/packages/hw-app-trx
+> tsc && tsc -m esnext --moduleResolution bundler --outDir lib-es
 

@@ -129,5 +129,3 @@ test("signTIP712HashedMessage", async () => {
     "1c9b03dd6de5285ac5a648d7288f111e8aafc6ae36338e000130011f1eb68fbbe9760513d08cb2a582d96af3559e5c1185235e3a35b14f223751254659108a5f1a"
   );
 });
-
-
