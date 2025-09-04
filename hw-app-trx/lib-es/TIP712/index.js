@@ -53,6 +53,7 @@ const makeRecursiveFieldStructImplem = ({ transport, loadConfig, chainId, erc20S
                 const entryFilters = filters?.fields.filter(f => f.path.startsWith(entryPath));
                 if (entryFilters && shouldUseDiscardedFields) {
                     for (const entryFilter of entryFilters) {
+                        console.log("ZYD entryFilter:", entryFilter);
                         await sendFilteringInfo(transport, "discardField", loadConfig, {
                             path: entryFilter.path,
                         });
@@ -168,6 +169,7 @@ const sendStructImplem = async (transport, structImplem) => {
         APDU_FIELDS[APDU_FIELDS["P2_field"] = 255] = "P2_field";
     })(APDU_FIELDS || (APDU_FIELDS = {}));
     const { structType, value } = structImplem;
+    console.log("ZYD structType:", structType, ", value:", value);
     if (structType === "root") {
         return transport.send(APDU_FIELDS.CLA, APDU_FIELDS.INS, APDU_FIELDS.P1_complete, APDU_FIELDS.P2_root, Buffer.from(value, "utf-8"));
     }
@@ -290,6 +292,7 @@ async function sendFilteringInfo(transport, type, loadConfig, data) {
                 amount: APDU_FIELDS.P2_amount_join_value,
             };
             const payload = getPayloadForFilterV2(format, coinRef, coinRefsTokensMap, displayNameBuffer, sigBuffer);
+            console.log("ZYD 222 payload:", payload.toString("hex"));
             return transport.send(APDU_FIELDS.CLA, APDU_FIELDS.INS, isDiscarded ? APDU_FIELDS.P1_discarded : APDU_FIELDS.P1_standard, P2FormatMap[format], payload);
         }
         case "discardField": {
@@ -344,6 +347,7 @@ export const signTIP712Message = async (transport, path, typedMessage, fullImple
         APDU_FIELDS[APDU_FIELDS["P2_full"] = 1] = "P2_full";
     })(APDU_FIELDS || (APDU_FIELDS = {}));
     const { primaryType, types: unsortedTypes, domain, message } = typedMessage;
+    console.log("ZYD typedMessage:", typedMessage);
     const { calServiceURL } = getLoadConfig(loadConfig);
     // Types are sorted by alphabetical order in order to get the same schema hash no matter the JSON format
     const types = sortObjectAlphabetically(unsortedTypes);

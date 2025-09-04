@@ -367,21 +367,26 @@ export function hexBuffer(str) {
 export const TIP712_TYPE_ENCODERS = {
     INT(value, size = 256) {
         const failSafeValue = value ?? "0";
+        console.log("ZYD failSafeValue:", failSafeValue);
         if (typeof failSafeValue === "string" && failSafeValue?.startsWith("0x")) {
             return hexBuffer(failSafeValue);
         }
         let valueAsBN = new BigNumber(failSafeValue);
+        console.log("ZYD valueAsBN:", valueAsBN);
         // If negative we'll use `two's complement` method to
         // "reversibly convert a positive binary number into a negative binary number with equivalent (but negative) value".
         // thx wikipedia
-        if (valueAsBN.lt(0)) {
+        if (valueAsBN.lt(0)) { 
             const sizeInBytes = size / 8;
             // Creates BN from a buffer serving as a mask filled by maximum value 0xff
             const maskAsBN = new BigNumber(`0x${Buffer.alloc(sizeInBytes, 0xff).toString("hex")}`);
+            console.log("ZYD maskAsBN:", maskAsBN);
             // two's complement version of value
             valueAsBN = maskAsBN.plus(valueAsBN).plus(1);
+            console.log("ZYD 222 valueAsBN:", valueAsBN);
         }
         const paddedHexString = valueAsBN.toString(16).length % 2 ? "0" + valueAsBN.toString(16) : valueAsBN.toString(16);
+        console.log("ZYD paddedHexString:", paddedHexString);
         return Buffer.from(paddedHexString, "hex");
     },
     UINT(value) {
