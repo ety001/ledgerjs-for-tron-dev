@@ -5,7 +5,7 @@ import {
 import cleanSpeculos from '@/lib/cleanSpeculos';
 
 const defaultSeed = 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about';
-const defaultModel = DeviceModelId.nanoS;
+const defaultModel = DeviceModelId.nanoSP;
 
 export async function POST(request: Request) {
   const {

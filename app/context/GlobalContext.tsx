@@ -56,12 +56,12 @@ const defaultState: GlobalState = {
   speculos: {
     status: false,
     deviceId: '',
-    model: DeviceModel.nanoS,
+    model: DeviceModel.nanoSP,
     appName: 'Tron',
     appVersion: '0.7.0',
     coinapps: './bin',
     firmware: '2.0',
-    overridesAppPath: 'nanoS/app.elf',
+    overridesAppPath: 'nanos2/app.elf',
     seed: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
   },
   ledgerHQ: {
