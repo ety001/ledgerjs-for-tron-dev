@@ -38,7 +38,7 @@ export const getFiltersForMessage = async (message, shouldUseV1Filters, calServi
                 params: {
                     output: "tip712_signatures",
                     eip712_signatures_version: shouldUseV1Filters ? "v1" : "v2",
-                    chain_id: message.domain?.chainId,
+                    chain_id: message.domain?.chainId || 0,
                     contracts: verifyingContract,
                 },
             });
