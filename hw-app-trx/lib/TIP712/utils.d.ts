@@ -1,10 +1,11 @@
 /// <reference types="node" />
 /// <reference types="node" />
 import { TIP712Message, MessageFilters, TIP712MessageTypesEntry, FilteringInfoShowField } from "./types";
+import Transport from "@ledgerhq/hw-transport";
 export declare const sortObjectAlphabetically: (obj: Record<string, unknown>) => Record<string, unknown>;
 export declare const getSchemaHashForMessage: (message: TIP712Message) => string;
 /**
- * Tries to find the proper filters for a given EIP712 message
+ * Tries to find the proper filters for a given TIP712 message
  * in the CAL
  *
  * @param {TIP712Message} message
@@ -30,7 +31,7 @@ export declare const getCoinRefTokensMap: (filters: MessageFilters | undefined, 
  * Using a path as a string, returns the value(s) of a json key without worrying about depth or arrays
  * (e.g: 'to.wallets.[]' => ["0x123", "0x456"])
  */
-export declare const getValueFromPath: (path: string, tip721Message: TIP712Message) => string | string[];
+export declare const getValueFromPath: (path: string, tip712Message: TIP712Message) => string | string[];
 /**
  * @ignore for the README
  *
@@ -85,7 +86,7 @@ export declare const constructTypeDescByteString: (isArray: boolean, typeSize: n
 /**
  * @ignore for the README
  *
- * Helper to create the buffer to describe an EIP712 types' entry structure
+ * Helper to create the buffer to describe an TIP712 types' entry structure
  *
  * @param {TIP712MessageTypesEntry} entry
  * @returns {Buffer}
@@ -135,4 +136,16 @@ export declare const TIP712_TYPE_ENCODERS: {
     STRING(value: string | null): Buffer;
     BYTES(value: string | null, size?: number): Buffer;
 };
+/**
+ * @ignore for the README
+ *
+ * Get the current application name loaded in Bolos and its version
+ *
+ * @param {Transport} transport
+ * @returns {Promise<{name: string, version: string}>}
+ */
+export declare const getAppAndVersion: (transport: Transport) => Promise<{
+    name: string;
+    version: string;
+}>;
 //# sourceMappingURL=utils.d.ts.map

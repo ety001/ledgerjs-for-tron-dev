@@ -5,10 +5,10 @@ export declare const signTIP712HashedMessage: (transport: Transport, path: strin
 /**
  * @ignore for the README
  *
- * Sign an TIP-721 formatted message following the specification here:
- * https://github.com/LedgerHQ/app-ethereum/blob/develop/doc/ethapp.asc#sign-eth-eip-712
+ * Sign an TIP-712 formatted message following the specification here:
+ * https://github.com/tronprotocol/tips/blob/master/tip-712.md
  * @example
-  tronApp.signTIP721Message("44'/195'/0'/0/0", {
+  tronApp.signTIP712Message("44'/195'/0'/0/0", {
     domain: {
       chainId: 1151668124,
       name: "Da Domain",
@@ -35,5 +35,5 @@ export declare const signTIP712HashedMessage: (transport: Transport, path: strin
  * @param {Boolean} fullImplem use the legacy implementation
  * @returns {Promise}
  */
-export declare const signTIP712Message: (transport: Transport, path: string, typedMessage: TIP712Message, fullImplem: boolean | undefined, loadConfig: LoadConfig) => Promise<string>;
+export declare const signTIP712Message: (transport: Transport, path: string, typedMessage: TIP712Message, fullImplem: boolean | undefined, loadConfig: LoadConfig, withoutFilters?: boolean) => Promise<string>;
 //# sourceMappingURL=index.d.ts.map

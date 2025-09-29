@@ -8,9 +8,9 @@ import {
   TIP712MessageTypesEntry,
   FilteringInfoShowField,
 } from "./types";
-import EIP712CAL from "@ledgerhq/cryptoassets-evm-signatures/data/eip712";
-import EIP712CALV2 from "@ledgerhq/cryptoassets-evm-signatures/data/eip712_v2";
+import TIP712CAL from "./tip712";
 import { AddressZero } from "@ethersproject/constants";
+import Transport from "@ledgerhq/hw-transport";
 
 export const sortObjectAlphabetically = (obj: Record<string, unknown>): Record<string, unknown> => {
   const keys = Object.keys(obj).sort();
@@ -38,7 +38,7 @@ export const getSchemaHashForMessage = (message: TIP712Message): string => {
 };
 
 /**
- * Tries to find the proper filters for a given EIP712 message
+ * Tries to find the proper filters for a given TIP712 message
  * in the CAL
  *
  * @param {TIP712Message} message
@@ -82,10 +82,7 @@ export const getFiltersForMessage = async (
   } catch (e) {
     const messageId = `${message.domain?.chainId ?? 0}:${verifyingContract}:${schemaHash}`;
 
-    if (shouldUseV1Filters) {
-      return EIP712CAL[messageId as keyof typeof EIP712CAL];
-    }
-    return EIP712CALV2[messageId as keyof typeof EIP712CALV2] as MessageFilters;
+    return TIP712CAL[messageId as keyof typeof TIP712CAL] as MessageFilters;
   }
 };
 
@@ -124,7 +121,7 @@ export const getCoinRefTokensMap = (
   }
 
   // For some messages like a Permit has no token address in its message, only the amount is provided.
-  // In those cases, we'll need to provide the verifying contract contained in the EIP712 domain
+  // In those cases, we'll need to provide the verifying contract contained in the TIP712 domain
   // The verifying contract is refrerenced by the coinRef 255 (0xff) in CAL and in the device
   // independently of the token index returned by the app after a providerERC20TokenInfo
   const shouldUseVerifyingContract = filters.fields.some(
@@ -167,9 +164,9 @@ const getValue = (
  * Using a path as a string, returns the value(s) of a json key without worrying about depth or arrays
  * (e.g: 'to.wallets.[]' => ["0x123", "0x456"])
  */
-export const getValueFromPath = (path: string, tip721Message: TIP712Message): string | string[] => {
+export const getValueFromPath = (path: string, tip712Message: TIP712Message): string | string[] => {
   const splittedPath = path.split(".");
-  const { message } = tip721Message;
+  const { message } = tip712Message;
 
   let value: any = message;
   for (let i = 0; i <= splittedPath.length - 1; i++) {
@@ -297,7 +294,7 @@ export const constructTypeDescByteString = (
 ): string => {
   if (typeValue >= 16) {
     throw new Error(
-      "Eth utils - constructTypeDescByteString - Cannot accept a typeValue >= 16 because the typeValue can only be 4 bits in binary" +
+      "Tron utils - constructTypeDescByteString - Cannot accept a typeValue >= 16 because the typeValue can only be 4 bits in binary" +
         { isArray, typeSize, typeValue },
     );
   }
@@ -327,7 +324,7 @@ enum TIP712_ARRAY_TYPE_VALUE {
 /**
  * @ignore for the README
  *
- * Helper to create the buffer to describe an EIP712 types' entry structure
+ * Helper to create the buffer to describe an TIP712 types' entry structure
  *
  * @param {TIP712MessageTypesEntry} entry
  * @returns {Buffer}
@@ -519,4 +516,32 @@ export const TIP712_TYPE_ENCODERS = {
     // Why slice again ?
     return hexBuffer(failSafeValue).slice(0, size ?? (failSafeValue?.length - 2) / 2);
   },
+};
+
+/**
+ * @ignore for the README
+ *
+ * Get the current application name loaded in Bolos and its version
+ *
+ * @param {Transport} transport
+ * @returns {Promise<{name: string, version: string}>}
+ */
+export const getAppAndVersion = async (
+  transport: Transport,
+): Promise<{ name: string; version: string }> => {
+  const appAndVersionHex = await transport.send(0xb0, 0x01, 0x00, 0x00);
+
+  let offset = 1;
+  const nameLength = appAndVersionHex[offset];
+  offset += 1;
+  const name = appAndVersionHex.subarray(offset, offset + nameLength).toString("ascii");
+  offset += nameLength;
+  const versionLength = appAndVersionHex[offset];
+  offset += 1;
+  const version = appAndVersionHex.subarray(offset, offset + versionLength).toString("ascii");
+
+  return {
+    name,
+    version,
+  };
 };

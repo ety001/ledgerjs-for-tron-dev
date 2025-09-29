@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-duplicate-enum-values */
 import Transport from "@ledgerhq/hw-transport";
 import { hexBuffer, splitPath } from "../utils";
 import type {
@@ -74,8 +75,8 @@ type MakeRecursiveFieldStructImplemParams = {
  * Factory to create the recursive function that will pass on each
  * field level and APDUs to describe its struct implementation
  *
- * @param {Eth["sendStructImplem"]} sendStructImplem
- * @param {EIP712MessageTypes} types
+ * @param {Trx["sendStructImplem"]} sendStructImplem
+ * @param {TIP712MessageTypes} types
  * @returns {void}
  */
 const makeRecursiveFieldStructImplem = ({
@@ -434,7 +435,7 @@ async function sendFilteringInfo(
       }
 
       // For some messages like a Permit has no token address in its message, only the amount is provided.
-      // In those cases, we'll need to provide the verifying contract contained in the EIP712 domain
+      // In those cases, we'll need to provide the verifying contract contained in the TIP712 domain
       // The verifying contract is refrerenced by the coinRef 255 (0xff) in CAL and in the device
       // independently of the token index returned by the app after a providerERC20TokenInfo
       const shouldUseVerifyingContract = format === "amount" && coinRef === 255;
@@ -495,10 +496,10 @@ async function sendFilteringInfo(
 /**
  * @ignore for the README
  *
- * Sign an TIP-721 formatted message following the specification here:
- * https://github.com/LedgerHQ/app-ethereum/blob/develop/doc/ethapp.asc#sign-eth-eip-712
+ * Sign an TIP-712 formatted message following the specification here:
+ * https://github.com/tronprotocol/tips/blob/master/tip-712.md
  * @example
-  tronApp.signTIP721Message("44'/195'/0'/0/0", {
+  tronApp.signTIP712Message("44'/195'/0'/0/0", {
     domain: {
       chainId: 1151668124,
       name: "Da Domain",
@@ -531,6 +532,7 @@ export const signTIP712Message = async (
   typedMessage: TIP712Message,
   fullImplem = false,
   loadConfig: LoadConfig,
+  withoutFilters = false,
 ): Promise<string> => {
   enum APDU_FIELDS {
     CLA = 0xe0,
@@ -546,7 +548,9 @@ export const signTIP712Message = async (
 
   const shouldUseV1Filters = false;
   const shouldUseDiscardedFields = true;
-  const filters = await getFiltersForMessage(typedMessage, shouldUseV1Filters, calServiceURL);
+  const filters = !withoutFilters
+    ? await getFiltersForMessage(typedMessage, shouldUseV1Filters, calServiceURL)
+    : undefined;
   const coinRefsTokensMap = getCoinRefTokensMap(filters, shouldUseV1Filters, typedMessage);
 
   const typeEntries = Object.entries(types) as [

@@ -29,21 +29,15 @@ export const findERC20SignaturesInfo = async (userLoadConfig, chainId) => {
  * Retrieve the token information by a given contract address if any
  */
 export const byContractAddressAndChainId = (contract, chainId, erc20SignaturesBlob) => {
-    console.log("ZYD byContractAddressAndChainId 111 erc20SignaturesBlob:", erc20SignaturesBlob, 
-        ", contract:", contract, ", chainId:", chainId);
-    console.log("ZYD map search:", String(chainId) + ":" + asContractAddress(contract))
     // If we are able to fetch data from s3 bucket that contains dynamic CAL
     if (erc20SignaturesBlob) {
         try {
-            console.log("ZYD byContractAddressAndChainId 222");
             return parse(erc20SignaturesBlob).byContractAndChainId(asContractAddress(contract), chainId);
         }
         catch (e) {
-            console.log("ZYD byContractAddressAndChainId 333");
             return get(chainId)?.byContractAndChainId(asContractAddress(contract), chainId);
         }
     }
-    console.log("ZYD byContractAddressAndChainId 444");
     // the static fallback when dynamic cal is not provided
     return get(chainId)?.byContractAndChainId(asContractAddress(contract), chainId);
 };
@@ -80,8 +74,6 @@ const parse = (erc20SignaturesBlob) => {
         map[String(chainId) + ":" + contractAddress] = entry;
         i += length;
     }
-    console.log("ZYD entries:", entries);
-    console.log("ZYD map:", map);
     return {
         list: () => entries,
         byContractAndChainId: (contractAddress, chainId) => map[String(chainId) + ":" + contractAddress],

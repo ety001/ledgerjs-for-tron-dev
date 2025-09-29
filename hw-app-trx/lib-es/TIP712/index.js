@@ -27,8 +27,8 @@ export const signTIP712HashedMessage = (transport, path, domainSeparatorHex, has
  * Factory to create the recursive function that will pass on each
  * field level and APDUs to describe its struct implementation
  *
- * @param {Eth["sendStructImplem"]} sendStructImplem
- * @param {EIP712MessageTypes} types
+ * @param {Trx["sendStructImplem"]} sendStructImplem
+ * @param {TIP712MessageTypes} types
  * @returns {void}
  */
 const makeRecursiveFieldStructImplem = ({ transport, loadConfig, chainId, erc20SignaturesBlob, types, filters, shouldUseV1Filters, shouldUseDiscardedFields, coinRefsTokensMap, }) => {
@@ -53,7 +53,6 @@ const makeRecursiveFieldStructImplem = ({ transport, loadConfig, chainId, erc20S
                 const entryFilters = filters?.fields.filter(f => f.path.startsWith(entryPath));
                 if (entryFilters && shouldUseDiscardedFields) {
                     for (const entryFilter of entryFilters) {
-                        console.log("ZYD entryFilter:", entryFilter);
                         await sendFilteringInfo(transport, "discardField", loadConfig, {
                             path: entryFilter.path,
                         });
@@ -169,7 +168,6 @@ const sendStructImplem = async (transport, structImplem) => {
         APDU_FIELDS[APDU_FIELDS["P2_field"] = 255] = "P2_field";
     })(APDU_FIELDS || (APDU_FIELDS = {}));
     const { structType, value } = structImplem;
-    console.log("ZYD structType:", structType, ", value:", value);
     if (structType === "root") {
         return transport.send(APDU_FIELDS.CLA, APDU_FIELDS.INS, APDU_FIELDS.P1_complete, APDU_FIELDS.P2_root, Buffer.from(value, "utf-8"));
     }
@@ -229,9 +227,7 @@ async function sendFilteringInfo(transport, type, loadConfig, data) {
         }
         case "showField": {
             const { displayName, sig, format, coinRef, chainId, coinRefsTokensMap, shouldUseV1Filters, erc20SignaturesBlob, isDiscarded, } = data;
-            console.log("ZYD displayName:", displayName, ", sig:", sig);
             const { displayNameBuffer, sigBuffer } = getFilterDisplayNameAndSigBuffers(displayName, sig);
-            console.log("ZYD After getFilterDisplayNameAndSigBuffers");
             if (shouldUseV1Filters) {
                 const payload = Buffer.concat([displayNameBuffer, sigBuffer]);
                 return transport.send(APDU_FIELDS.CLA, APDU_FIELDS.INS, APDU_FIELDS.P1_standard, APDU_FIELDS.P2_show_field, payload);
@@ -243,13 +239,9 @@ async function sendFilteringInfo(transport, type, loadConfig, data) {
                 PROVIDE_TOKEN_INFOS_APDU_FIELDS[PROVIDE_TOKEN_INFOS_APDU_FIELDS["P1"] = 0] = "P1";
                 PROVIDE_TOKEN_INFOS_APDU_FIELDS[PROVIDE_TOKEN_INFOS_APDU_FIELDS["P2"] = 0] = "P2";
             })(PROVIDE_TOKEN_INFOS_APDU_FIELDS || (PROVIDE_TOKEN_INFOS_APDU_FIELDS = {}));
-
-            console.log("ZYD format:", format, ", coinRef:", coinRef);
-            console.log("ZYD coinRefsTokensMap:", coinRefsTokensMap);
-            /* const isTokenAddress = format === "token";
+            const isTokenAddress = format === "token";
             if (isTokenAddress && coinRef !== undefined) {
                 const { token, deviceTokenIndex } = coinRefsTokensMap[coinRef];
-                console.log("ZYD token:", token, ", deviceTokenIndex:", deviceTokenIndex);
                 if (deviceTokenIndex === undefined) {
                     const payload = await byContractAddressAndChainId(token, chainId, erc20SignaturesBlob);
                     if (payload) {
@@ -257,9 +249,9 @@ async function sendFilteringInfo(transport, type, loadConfig, data) {
                         coinRefsTokensMap[coinRef].deviceTokenIndex = response[0];
                     }
                 }
-            } */
+            }
             // For some messages like a Permit has no token address in its message, only the amount is provided.
-            // In those cases, we'll need to provide the verifying contract contained in the EIP712 domain
+            // In those cases, we'll need to provide the verifying contract contained in the TIP712 domain
             // The verifying contract is refrerenced by the coinRef 255 (0xff) in CAL and in the device
             // independently of the token index returned by the app after a providerERC20TokenInfo
             const shouldUseVerifyingContract = format === "amount" && coinRef === 255;
@@ -269,17 +261,6 @@ async function sendFilteringInfo(transport, type, loadConfig, data) {
                 if (payload) {
                     await transport.send(0xe0, PROVIDE_TOKEN_INFOS_APDU_FIELDS.INS, 0x00, 0x00, payload.data);
                     coinRefsTokensMap[255].deviceTokenIndex = 255;
-                }
-            } else if (coinRef !== undefined) {
-                const { token, deviceTokenIndex } = coinRefsTokensMap[coinRef];
-                console.log("ZYD token:", token, ", deviceTokenIndex:", deviceTokenIndex);
-                if (deviceTokenIndex === undefined) {
-                    const payload = await byContractAddressAndChainId(token, chainId, erc20SignaturesBlob);
-                    console.log("ZYD payload:", payload);
-                    if (payload) {
-                        const response = await transport.send(PROVIDE_TOKEN_INFOS_APDU_FIELDS.CLA, PROVIDE_TOKEN_INFOS_APDU_FIELDS.INS, PROVIDE_TOKEN_INFOS_APDU_FIELDS.P1, PROVIDE_TOKEN_INFOS_APDU_FIELDS.P2, payload.data);
-                        coinRefsTokensMap[coinRef].deviceTokenIndex = response[0];
-                    }
                 }
             }
             if (!format) {
@@ -292,7 +273,6 @@ async function sendFilteringInfo(transport, type, loadConfig, data) {
                 amount: APDU_FIELDS.P2_amount_join_value,
             };
             const payload = getPayloadForFilterV2(format, coinRef, coinRefsTokensMap, displayNameBuffer, sigBuffer);
-            console.log("ZYD 222 payload:", payload.toString("hex"));
             return transport.send(APDU_FIELDS.CLA, APDU_FIELDS.INS, isDiscarded ? APDU_FIELDS.P1_discarded : APDU_FIELDS.P1_standard, P2FormatMap[format], payload);
         }
         case "discardField": {
@@ -307,10 +287,10 @@ async function sendFilteringInfo(transport, type, loadConfig, data) {
 /**
  * @ignore for the README
  *
- * Sign an TIP-721 formatted message following the specification here:
- * https://github.com/LedgerHQ/app-ethereum/blob/develop/doc/ethapp.asc#sign-eth-eip-712
+ * Sign an TIP-712 formatted message following the specification here:
+ * https://github.com/tronprotocol/tips/blob/master/tip-712.md
  * @example
-  tronApp.signTIP721Message("44'/195'/0'/0/0", {
+  tronApp.signTIP712Message("44'/195'/0'/0/0", {
     domain: {
       chainId: 1151668124,
       name: "Da Domain",
@@ -337,7 +317,7 @@ async function sendFilteringInfo(transport, type, loadConfig, data) {
  * @param {Boolean} fullImplem use the legacy implementation
  * @returns {Promise}
  */
-export const signTIP712Message = async (transport, path, typedMessage, fullImplem = false, loadConfig) => {
+export const signTIP712Message = async (transport, path, typedMessage, fullImplem = false, loadConfig, withoutFilters = false) => {
     let APDU_FIELDS;
     (function (APDU_FIELDS) {
         APDU_FIELDS[APDU_FIELDS["CLA"] = 224] = "CLA";
@@ -347,13 +327,14 @@ export const signTIP712Message = async (transport, path, typedMessage, fullImple
         APDU_FIELDS[APDU_FIELDS["P2_full"] = 1] = "P2_full";
     })(APDU_FIELDS || (APDU_FIELDS = {}));
     const { primaryType, types: unsortedTypes, domain, message } = typedMessage;
-    console.log("ZYD typedMessage:", typedMessage);
     const { calServiceURL } = getLoadConfig(loadConfig);
     // Types are sorted by alphabetical order in order to get the same schema hash no matter the JSON format
     const types = sortObjectAlphabetically(unsortedTypes);
     const shouldUseV1Filters = false;
     const shouldUseDiscardedFields = true;
-    const filters = await getFiltersForMessage(typedMessage, shouldUseV1Filters, calServiceURL);
+    const filters = !withoutFilters
+        ? await getFiltersForMessage(typedMessage, shouldUseV1Filters, calServiceURL)
+        : undefined;
     const coinRefsTokensMap = getCoinRefTokensMap(filters, shouldUseV1Filters, typedMessage);
     const typeEntries = Object.entries(types);
     // Looping on all types entries and fields to send structs' definitions
@@ -376,7 +357,6 @@ export const signTIP712Message = async (transport, path, typedMessage, fullImple
     const erc20SignaturesBlob = !shouldUseV1Filters
         ? await findERC20SignaturesInfo(loadConfig, domain.chainId || 0)
         : undefined;
-    console.log("ZYD erc20SignaturesBlob:", erc20SignaturesBlob);
     // Create the recursion that should pass on each entry
     // of the domain fields and primaryType fields
     const recursiveFieldStructImplem = makeRecursiveFieldStructImplem({

@@ -1,8 +1,7 @@
 import BigNumber from "bignumber.js";
 import SHA224 from "crypto-js/sha224";
 import axios from "axios";
-import EIP712CAL from "@ledgerhq/cryptoassets-evm-signatures/data/eip712";
-import EIP712CALV2 from "@ledgerhq/cryptoassets-evm-signatures/data/eip712_v2";
+import TIP712CAL from "./tip712";
 import { AddressZero } from "@ethersproject/constants";
 export const sortObjectAlphabetically = (obj) => {
     const keys = Object.keys(obj).sort();
@@ -23,7 +22,7 @@ export const getSchemaHashForMessage = (message) => {
     return SHA224(JSON.stringify(sortedTypes).replace(" ", "")).toString();
 };
 /**
- * Tries to find the proper filters for a given EIP712 message
+ * Tries to find the proper filters for a given TIP712 message
  * in the CAL
  *
  * @param {TIP712Message} message
@@ -56,10 +55,7 @@ export const getFiltersForMessage = async (message, shouldUseV1Filters, calServi
     }
     catch (e) {
         const messageId = `${message.domain?.chainId ?? 0}:${verifyingContract}:${schemaHash}`;
-        if (shouldUseV1Filters) {
-            return EIP712CAL[messageId];
-        }
-        return EIP712CALV2[messageId];
+        return TIP712CAL[messageId];
     }
 };
 /**
@@ -91,7 +87,7 @@ export const getCoinRefTokensMap = (filters, shouldUseV1Filters, message) => {
         coinRefsTokensMap[coinRef] = { token };
     }
     // For some messages like a Permit has no token address in its message, only the amount is provided.
-    // In those cases, we'll need to provide the verifying contract contained in the EIP712 domain
+    // In those cases, we'll need to provide the verifying contract contained in the TIP712 domain
     // The verifying contract is refrerenced by the coinRef 255 (0xff) in CAL and in the device
     // independently of the token index returned by the app after a providerERC20TokenInfo
     const shouldUseVerifyingContract = filters.fields.some(filter => filter.format === "amount" && filter.coin_ref === 255);
@@ -124,9 +120,9 @@ const getValue = (path, value) => {
  * Using a path as a string, returns the value(s) of a json key without worrying about depth or arrays
  * (e.g: 'to.wallets.[]' => ["0x123", "0x456"])
  */
-export const getValueFromPath = (path, tip721Message) => {
+export const getValueFromPath = (path, tip712Message) => {
     const splittedPath = path.split(".");
-    const { message } = tip721Message;
+    const { message } = tip712Message;
     let value = message;
     for (let i = 0; i <= splittedPath.length - 1; i++) {
         const subPath = splittedPath[i];
@@ -230,7 +226,7 @@ export const intAsHexBytes = (int, bytes) => int.toString(16).padStart(2 * bytes
  */
 export const constructTypeDescByteString = (isArray, typeSize, typeValue) => {
     if (typeValue >= 16) {
-        throw new Error("Eth utils - constructTypeDescByteString - Cannot accept a typeValue >= 16 because the typeValue can only be 4 bits in binary" +
+        throw new Error("Tron utils - constructTypeDescByteString - Cannot accept a typeValue >= 16 because the typeValue can only be 4 bits in binary" +
             { isArray, typeSize, typeValue });
     }
     // 1 is array, 0 is not array
@@ -257,7 +253,7 @@ var TIP712_ARRAY_TYPE_VALUE;
 /**
  * @ignore for the README
  *
- * Helper to create the buffer to describe an EIP712 types' entry structure
+ * Helper to create the buffer to describe an TIP712 types' entry structure
  *
  * @param {TIP712MessageTypesEntry} entry
  * @returns {Buffer}
@@ -367,26 +363,21 @@ export function hexBuffer(str) {
 export const TIP712_TYPE_ENCODERS = {
     INT(value, size = 256) {
         const failSafeValue = value ?? "0";
-        console.log("ZYD failSafeValue:", failSafeValue);
         if (typeof failSafeValue === "string" && failSafeValue?.startsWith("0x")) {
             return hexBuffer(failSafeValue);
         }
         let valueAsBN = new BigNumber(failSafeValue);
-        console.log("ZYD valueAsBN:", valueAsBN);
         // If negative we'll use `two's complement` method to
         // "reversibly convert a positive binary number into a negative binary number with equivalent (but negative) value".
         // thx wikipedia
-        if (valueAsBN.lt(0)) { 
+        if (valueAsBN.lt(0)) {
             const sizeInBytes = size / 8;
             // Creates BN from a buffer serving as a mask filled by maximum value 0xff
             const maskAsBN = new BigNumber(`0x${Buffer.alloc(sizeInBytes, 0xff).toString("hex")}`);
-            console.log("ZYD maskAsBN:", maskAsBN);
             // two's complement version of value
             valueAsBN = maskAsBN.plus(valueAsBN).plus(1);
-            console.log("ZYD 222 valueAsBN:", valueAsBN);
         }
         const paddedHexString = valueAsBN.toString(16).length % 2 ? "0" + valueAsBN.toString(16) : valueAsBN.toString(16);
-        console.log("ZYD paddedHexString:", paddedHexString);
         return Buffer.from(paddedHexString, "hex");
     },
     UINT(value) {
@@ -407,5 +398,28 @@ export const TIP712_TYPE_ENCODERS = {
         // Why slice again ?
         return hexBuffer(failSafeValue).slice(0, size ?? (failSafeValue?.length - 2) / 2);
     },
+};
+/**
+ * @ignore for the README
+ *
+ * Get the current application name loaded in Bolos and its version
+ *
+ * @param {Transport} transport
+ * @returns {Promise<{name: string, version: string}>}
+ */
+export const getAppAndVersion = async (transport) => {
+    const appAndVersionHex = await transport.send(0xb0, 0x01, 0x00, 0x00);
+    let offset = 1;
+    const nameLength = appAndVersionHex[offset];
+    offset += 1;
+    const name = appAndVersionHex.subarray(offset, offset + nameLength).toString("ascii");
+    offset += nameLength;
+    const versionLength = appAndVersionHex[offset];
+    offset += 1;
+    const version = appAndVersionHex.subarray(offset, offset + versionLength).toString("ascii");
+    return {
+        name,
+        version,
+    };
 };
 //# sourceMappingURL=utils.js.map

@@ -31,8 +31,8 @@ exports.signTIP712HashedMessage = signTIP712HashedMessage;
  * Factory to create the recursive function that will pass on each
  * field level and APDUs to describe its struct implementation
  *
- * @param {Eth["sendStructImplem"]} sendStructImplem
- * @param {EIP712MessageTypes} types
+ * @param {Trx["sendStructImplem"]} sendStructImplem
+ * @param {TIP712MessageTypes} types
  * @returns {void}
  */
 const makeRecursiveFieldStructImplem = ({ transport, loadConfig, chainId, erc20SignaturesBlob, types, filters, shouldUseV1Filters, shouldUseDiscardedFields, coinRefsTokensMap, }) => {
@@ -255,7 +255,7 @@ async function sendFilteringInfo(transport, type, loadConfig, data) {
                 }
             }
             // For some messages like a Permit has no token address in its message, only the amount is provided.
-            // In those cases, we'll need to provide the verifying contract contained in the EIP712 domain
+            // In those cases, we'll need to provide the verifying contract contained in the TIP712 domain
             // The verifying contract is refrerenced by the coinRef 255 (0xff) in CAL and in the device
             // independently of the token index returned by the app after a providerERC20TokenInfo
             const shouldUseVerifyingContract = format === "amount" && coinRef === 255;
@@ -291,10 +291,10 @@ async function sendFilteringInfo(transport, type, loadConfig, data) {
 /**
  * @ignore for the README
  *
- * Sign an TIP-721 formatted message following the specification here:
- * https://github.com/LedgerHQ/app-ethereum/blob/develop/doc/ethapp.asc#sign-eth-eip-712
+ * Sign an TIP-712 formatted message following the specification here:
+ * https://github.com/tronprotocol/tips/blob/master/tip-712.md
  * @example
-  tronApp.signTIP721Message("44'/195'/0'/0/0", {
+  tronApp.signTIP712Message("44'/195'/0'/0/0", {
     domain: {
       chainId: 1151668124,
       name: "Da Domain",
@@ -321,7 +321,7 @@ async function sendFilteringInfo(transport, type, loadConfig, data) {
  * @param {Boolean} fullImplem use the legacy implementation
  * @returns {Promise}
  */
-const signTIP712Message = async (transport, path, typedMessage, fullImplem = false, loadConfig) => {
+const signTIP712Message = async (transport, path, typedMessage, fullImplem = false, loadConfig, withoutFilters = false) => {
     let APDU_FIELDS;
     (function (APDU_FIELDS) {
         APDU_FIELDS[APDU_FIELDS["CLA"] = 224] = "CLA";
@@ -336,7 +336,9 @@ const signTIP712Message = async (transport, path, typedMessage, fullImplem = fal
     const types = (0, utils_2.sortObjectAlphabetically)(unsortedTypes);
     const shouldUseV1Filters = false;
     const shouldUseDiscardedFields = true;
-    const filters = await (0, utils_2.getFiltersForMessage)(typedMessage, shouldUseV1Filters, calServiceURL);
+    const filters = !withoutFilters
+        ? await (0, utils_2.getFiltersForMessage)(typedMessage, shouldUseV1Filters, calServiceURL)
+        : undefined;
     const coinRefsTokensMap = (0, utils_2.getCoinRefTokensMap)(filters, shouldUseV1Filters, typedMessage);
     const typeEntries = Object.entries(types);
     // Looping on all types entries and fields to send structs' definitions

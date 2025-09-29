@@ -393,11 +393,11 @@ export default class Trx {
   }
 
   /**
-   * Sign an TIP-721 formatted message following the specification here:
-   * https://github.com/LedgerHQ/app-ethereum/blob/develop/doc/ethapp.asc#sign-eth-eip-712
-   * ⚠️ This method is not compatible with nano S (LNS). Make sure to use a try/catch to fallback on the signEIP712HashedMessage method ⚠️
+   * Sign an TIP-712 formatted message following the specification here:
+   * https://github.com/tronprotocol/tips/blob/master/tip-712.md
+   * ⚠️ This method is not compatible with nano S (LNS). Make sure to use a try/catch to fallback on the signTIP712HashedMessage method ⚠️
    @example
-   tronApp.signTIP721Message("44'/195'/0'/0/0", {
+   tronApp.signTIP712Message("44'/195'/0'/0/0", {
       domain: {
         chainId: 1151668124,
         name: "Da Domain",
@@ -423,8 +423,20 @@ export default class Trx {
    * @param {Object} jsonMessage message to sign
    * @param {Boolean} fullImplem use the legacy implementation
    */
-  signTIP712Message(path: string, typedMessage: TIP712Message, fullImplem = false) {
-    return signTIP712Message(this.transport, path, typedMessage, fullImplem, this.loadConfig);
+  signTIP712Message(
+    path: string,
+    typedMessage: TIP712Message,
+    fullImplem = false,
+    withoutFilters = false,
+  ) {
+    return signTIP712Message(
+      this.transport,
+      path,
+      typedMessage,
+      fullImplem,
+      this.loadConfig,
+      withoutFilters,
+    );
   }
 
   /**
