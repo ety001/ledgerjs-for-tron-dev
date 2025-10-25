@@ -17,6 +17,7 @@ export enum DeviceModel {
   nanoS = 'nanoS',
   nanoX = 'nanoX',
   nanoSP = 'nanoSP',
+  stax = 'stax',
 }
 
 export interface SpeculosEmulator {
