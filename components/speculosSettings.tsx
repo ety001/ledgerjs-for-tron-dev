@@ -19,7 +19,6 @@ export default function SpeculosSettings() {
   const [open, setOpen] = useState(false);
 
   const handleInputChange = (field: keyof typeof settings, value: string) => {
-    console.log(field, value);
     setSettings(prev => ({
       ...prev,
       [field]: value

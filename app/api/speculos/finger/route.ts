@@ -4,17 +4,17 @@ import {
 
 const actionList = [
   'press-and-release',
+  'press',
+  'release',
 ];
 
 export async function POST(request: Request) {
   const data = await request.json();
   const { deviceId, action, x, y } = data;
-  console.log('data:', data);
   if (!actionList.includes(action)) {
     return Response.json({'status': 'error', 'message': 'Invalid action value'});
   }
   const device = getMemorySpeculosDeviceInternal(deviceId);
-  console.log('device:', device);
   if (!device) {
     return Response.json({'status': 'error', 'message': 'Device not found'});
   }
@@ -34,6 +34,5 @@ export async function POST(request: Request) {
     return Response.json({'status': 'error', 'message': 'Failed to press finger'});
   }
   const fingerData = await fingerRes.json();
-  console.log('fingerData:', fingerData);
   return Response.json({'status': 'success', 'message': fingerData});
 }

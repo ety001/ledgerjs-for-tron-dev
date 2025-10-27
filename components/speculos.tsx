@@ -96,7 +96,7 @@ export default function Speculos() {
     setTimestamp(Date.now().toString());
   };
 
-  const handleImageClick = async (event: React.MouseEvent<HTMLDivElement>) => {
+  const handleMouseDown = async (event: React.MouseEvent<HTMLDivElement>) => {
     if (status !== "running") return;
     
     const rect = event.currentTarget.getBoundingClientRect();
@@ -105,12 +105,12 @@ export default function Speculos() {
     
     const fingerData = {
       deviceId: state.speculos.deviceId,
-      action: 'press-and-release',
+      action: 'press',
       x: x,
       y: y
     };
     
-    console.log('fingerData:', fingerData);
+    console.log('fingerData (press):', fingerData);
     
     try {
       const response = await fetch('/api/speculos/finger', {
@@ -125,6 +125,45 @@ export default function Speculos() {
       
       if (result.status === "error") {
         setError(result.message ?? "Failed to press finger");
+        return;
+      }
+      
+      setTimestamp(Date.now().toString());
+    } catch (error) {
+      const errorLog = `Finger API error: ${error}\n`;
+      setError("Failed to call finger API");
+    }
+  };
+
+  const handleMouseUp = async (event: React.MouseEvent<HTMLDivElement>) => {
+    if (status !== "running") return;
+    
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = Math.round(event.clientX - rect.left);
+    const y = Math.round(event.clientY - rect.top);
+    
+    const fingerData = {
+      deviceId: state.speculos.deviceId,
+      action: 'release',
+      x: x,
+      y: y
+    };
+    
+    console.log('fingerData (release):', fingerData);
+    
+    try {
+      const response = await fetch('/api/speculos/finger', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(fingerData),
+      });
+      
+      const result = await response.json();
+      
+      if (result.status === "error") {
+        setError(result.message ?? "Failed to release finger");
         return;
       }
       
@@ -205,7 +244,8 @@ export default function Speculos() {
           <div className="flex flex-col gap-4">
             <div 
               className="relative cursor-pointer select-none"
-              onClick={handleImageClick}
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
             >
               <img
                 src={`/api/speculos/screenshot?force=${timestamp}&deviceId=${state.speculos.deviceId}`}
