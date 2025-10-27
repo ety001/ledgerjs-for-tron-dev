@@ -10,8 +10,39 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useGlobal } from "@/app/context/GlobalContext";
+import { useGlobal, DeviceModel } from "@/app/context/GlobalContext";
+
+// 预配置模板
+const presetConfigs = {
+  nanosp: {
+    model: DeviceModel.nanoSP,
+    appName: 'Tron',
+    appVersion: '0.7.0',
+    coinapps: './bin',
+    firmware: '2.0',
+    overridesAppPath: `${DeviceModel.nanoSP}/app.elf`,
+    seed: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
+  },
+  stax: {
+    model: DeviceModel.stax,
+    appName: 'Tron',
+    appVersion: '0.7.0',
+    coinapps: './bin',
+    firmware: '2.0',
+    overridesAppPath: `${DeviceModel.stax}/app.elf`,
+    seed: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
+  },
+};
+
+
 
 export default function SpeculosSettings() {
   const { state, setSpeculos } = useGlobal();
@@ -23,6 +54,17 @@ export default function SpeculosSettings() {
       ...prev,
       [field]: value
     }));
+  };
+
+  const handlePreset = (presetKey: keyof typeof presetConfigs) => {
+    const preset = presetConfigs[presetKey as keyof typeof presetConfigs];
+    setSettings(prev => ({
+      ...prev,
+      ...preset,
+      status: prev.status,
+      deviceId: prev.deviceId,
+    }));
+    toast.success(`Loaded ${presetKey} preset`);
   };
 
   const handleSave = () => {
@@ -47,6 +89,18 @@ export default function SpeculosSettings() {
             </p>
           </div>
           <div className="grid gap-2">
+            <div className="grid grid-cols-3 items-center gap-4">
+              <Label htmlFor="model">Preset</Label>
+              <Select value={settings.model || undefined} onValueChange={(value) => handlePreset(value as keyof typeof presetConfigs)}>
+                <SelectTrigger className="col-span-2 h-8">
+                  <SelectValue placeholder="Select a preset" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="nanosp">Nano S Plus</SelectItem>
+                  <SelectItem value="stax">Stax</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div className="grid grid-cols-3 items-center gap-4">
               <Label htmlFor="model">Model</Label>
               <Input

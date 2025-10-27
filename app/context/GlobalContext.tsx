@@ -14,9 +14,7 @@ export enum DeviceType {
 }
 
 export enum DeviceModel {
-  nanoS = 'nanoS',
-  nanoX = 'nanoX',
-  nanoSP = 'nanoSP',
+  nanoSP = 'nanosp',
   stax = 'stax',
 }
 
@@ -57,12 +55,12 @@ const defaultState: GlobalState = {
   speculos: {
     status: false,
     deviceId: '',
-    model: DeviceModel.nanoS,
+    model: DeviceModel.nanoSP,
     appName: 'Tron',
     appVersion: '0.7.0',
     coinapps: './bin',
     firmware: '2.0',
-    overridesAppPath: 'nanoS/app.elf',
+    overridesAppPath: `${DeviceModel.nanoSP}/app.elf`,
     seed: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
   },
   ledgerHQ: {
