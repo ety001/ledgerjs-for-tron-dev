@@ -1,20 +1,20 @@
 <testExecutions version="1">
 <file path="/Users/lanyu/zyd/ledger/ledger-live/libs/ledgerjs/packages/hw-app-trx/tests/TIP712/utils.unit.test.ts">
-<testCase name="TIP712 Utils destructTypeFromString &apos;string[]&apos; should return [{name: &apos;string&apos;, size: undefined}, [null]]" duration="4" />
+<testCase name="TIP712 Utils destructTypeFromString &apos;string[]&apos; should return [{name: &apos;string&apos;, size: undefined}, [null]]" duration="2" />
 <testCase name="TIP712 Utils destructTypeFromString &apos;uint8[2][][4]&apos; should return [{name: &apos;uint&apos;, size: 8}, [2, null, 4]]" duration="0" />
-<testCase name="TIP712 Utils destructTypeFromString &apos;bytes64&apos; should return [{ name: &apos;bytes&apos;, size: 64 }, []]" duration="1" />
+<testCase name="TIP712 Utils destructTypeFromString &apos;bytes64&apos; should return [{ name: &apos;bytes&apos;, size: 64 }, []]" duration="0" />
 <testCase name="TIP712 Utils destructTypeFromString &apos;bool&apos; should return [{ name: &apos;bool&apos;, size: undefined }, []]" duration="0" />
-<testCase name="TIP712 Utils destructTypeFromString &apos;bool[any]&apos; should not throw and return [&apos;bool&apos;, []]" duration="1" />
+<testCase name="TIP712 Utils destructTypeFromString &apos;bool[any]&apos; should not throw and return [&apos;bool&apos;, []]" duration="0" />
 <testCase name="TIP712 Utils destructTypeFromString V2DutchOrder should not be splitted even though it contains a number not related to the size" duration="0" />
-<testCase name="TIP712 Utils destructTypeFromString KvnV2 should not be splitted even though it contains a number at the end not related to the size" duration="0" />
+<testCase name="TIP712 Utils destructTypeFromString KvnV2 should not be splitted even though it contains a number at the end not related to the size" duration="1" />
 <testCase name="TIP712 Utils destructTypeFromString should not throw with undefined" duration="0" />
 <testCase name="TIP712 Utils constructTypeDescByteString should return 1 as hex int and 01 as hexa string" duration="0" />
 <testCase name="TIP712 Utils constructTypeDescByteString should return 129 as hex int and 81 as hexa string" duration="0" />
 <testCase name="TIP712 Utils constructTypeDescByteString should return 193 as hex int and c1 as hexa string" duration="0" />
 <testCase name="TIP712 Utils constructTypeDescByteString should return 207 as hex int and cf as hexa string" duration="0" />
-<testCase name="TIP712 Utils constructTypeDescByteString should return 143 as hex int and 8f as hexa string" duration="1" />
-<testCase name="TIP712 Utils constructTypeDescByteString should return 15 as hex int and " duration="2" />
-<testCase name="TIP712 Utils constructTypeDescByteString should throw if typeValue &gt;= 16" duration="18" />
+<testCase name="TIP712 Utils constructTypeDescByteString should return 143 as hex int and 8f as hexa string" duration="0" />
+<testCase name="TIP712 Utils constructTypeDescByteString should return 15 as hex int and " duration="1" />
+<testCase name="TIP712 Utils constructTypeDescByteString should throw if typeValue &gt;= 16" duration="12" />
 <testCase name="TIP712 Utils constructTypeDescByteString should return the same as the bitewise implementation" duration="1" />
 <testCase name="TIP712 Utils makeTypeEntryStructBuffer should return the correct buffer for entry type `int`" duration="0" />
 <testCase name="TIP712 Utils makeTypeEntryStructBuffer should return the correct buffer for entry type `int8`" duration="0" />
@@ -23,27 +23,27 @@
 <testCase name="TIP712 Utils makeTypeEntryStructBuffer should return the correct buffer for entry type `address`" duration="0" />
 <testCase name="TIP712 Utils makeTypeEntryStructBuffer should return the correct buffer for entry type `bool`" duration="0" />
 <testCase name="TIP712 Utils makeTypeEntryStructBuffer should return the correct buffer for entry type `string`" duration="0" />
-<testCase name="TIP712 Utils makeTypeEntryStructBuffer should return the correct buffer for entry type `string[3][]`" duration="0" />
-<testCase name="TIP712 Utils makeTypeEntryStructBuffer should return the correct buffer for entry type `bytes`" duration="1" />
+<testCase name="TIP712 Utils makeTypeEntryStructBuffer should return the correct buffer for entry type `string[3][]`" duration="1" />
+<testCase name="TIP712 Utils makeTypeEntryStructBuffer should return the correct buffer for entry type `bytes`" duration="0" />
 <testCase name="TIP712 Utils makeTypeEntryStructBuffer should return the correct buffer for entry type `bytes32`" duration="0" />
 <testCase name="TIP712 Utils makeTypeEntryStructBuffer should return the correct buffer for entry type `bytes32[4]`" duration="0" />
 <testCase name="TIP712 Utils makeTypeEntryStructBuffer should return the correct buffer for entry type `bytes32[4][]`" duration="0" />
 <testCase name="TIP712 Utils makeTypeEntryStructBuffer should return the correct buffer for entry type `bytes32[4][][256]`" duration="0" />
 <testCase name="TIP712 Utils makeTypeEntryStructBuffer should return the correct buffer for entry type `custom`" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 115792089237316195423570985008687907853269984665640564039457584007913129639935 and size: 256" duration="2" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -57896044618658097711785492504343953926634992332820282019728792003956564819968 and size: 256" duration="2" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -57896044618658097711785492504343953926634992332820282019728792003956564819968 and size: 256" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 57896044618658097711785492504343953926634992332820282019728792003956564819967 and size: 256" duration="1" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -170141183460469231731687303715884105728 and size: 128" duration="1" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -170141183460469231731687303715884105728 and size: 256" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -170141183460469231731687303715884105728 and size: 128" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -170141183460469231731687303715884105728 and size: 256" duration="2" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 170141183460469231731687303715884105727 and size: 128" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 170141183460469231731687303715884105727 and size: 256" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -9223372036854775808 and size: 64" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 170141183460469231731687303715884105727 and size: 256" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -9223372036854775808 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -9223372036854775808 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -9223372036854775808 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 9223372036854775807 and size: 64" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 9223372036854775807 and size: 128" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 9223372036854775807 and size: 128" duration="2" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 9223372036854775807 and size: 256" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -2147483648 and size: 32" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -2147483648 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -2147483648 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -2147483648 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -2147483648 and size: 256" duration="0" />
@@ -51,8 +51,8 @@
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 2147483647 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 2147483647 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 2147483647 and size: 256" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -32768 and size: 16" duration="1" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -32768 and size: 32" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -32768 and size: 16" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -32768 and size: 32" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -32768 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -32768 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -32768 and size: 256" duration="0" />
@@ -62,26 +62,26 @@
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 32767 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 32767 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -256 and size: 8" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -256 and size: 16" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -256 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -256 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -256 and size: 64" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -256 and size: 128" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -256 and size: 128" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -256 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 256 and size: 8" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 256 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 256 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 256 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 256 and size: 128" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 256 and size: 256" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 256 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -128 and size: 8" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -128 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -128 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -128 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -128 and size: 128" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -128 and size: 256" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 128 and size: 8" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -128 and size: 256" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 128 and size: 8" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 128 and size: 16" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 128 and size: 32" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 128 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 128 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 128 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 128 and size: 256" duration="0" />
@@ -90,14 +90,14 @@
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -64 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -64 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -64 and size: 128" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -64 and size: 256" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -64 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 64 and size: 8" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 64 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 64 and size: 32" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 64 and size: 64" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 64 and size: 64" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 64 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 64 and size: 256" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 32 and size: 8" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 32 and size: 8" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 32 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 32 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 32 and size: 64" duration="0" />
@@ -109,48 +109,48 @@
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -32 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -32 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -32 and size: 256" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -16 and size: 8" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -16 and size: 8" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -16 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -16 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -16 and size: 64" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -16 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -16 and size: 256" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 16 and size: 8" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 16 and size: 8" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 16 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 16 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 16 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 16 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 16 and size: 256" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 8 and size: 8" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 8 and size: 8" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 8 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 8 and size: 32" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 8 and size: 64" duration="1" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 8 and size: 128" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 8 and size: 64" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 8 and size: 128" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 8 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -8 and size: 8" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -8 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -8 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -8 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -8 and size: 128" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -8 and size: 256" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: -8 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 0 and size: 8" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 0 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 0 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 0 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 0 and size: 128" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 0 and size: 256" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from decimal string should have the right return for value: 0 and size: 256" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 115792089237316195423570985008687907853269984665640564039457584007913129639935 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -57896044618658097711785492504343953926634992332820282019728792003956564819968 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 57896044618658097711785492504343953926634992332820282019728792003956564819967 and size: 256" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -170141183460469231731687303715884105728 and size: 128" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -170141183460469231731687303715884105728 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -170141183460469231731687303715884105728 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 170141183460469231731687303715884105727 and size: 128" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 170141183460469231731687303715884105727 and size: 256" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -9223372036854775808 and size: 64" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 170141183460469231731687303715884105727 and size: 256" duration="6" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -9223372036854775808 and size: 64" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -9223372036854775808 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -9223372036854775808 and size: 256" duration="1" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 9223372036854775807 and size: 64" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 9223372036854775807 and size: 128" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 9223372036854775807 and size: 64" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 9223372036854775807 and size: 128" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 9223372036854775807 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -2147483648 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -2147483648 and size: 64" duration="0" />
@@ -160,19 +160,19 @@
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 2147483647 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 2147483647 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 2147483647 and size: 256" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -32768 and size: 16" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -32768 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -32768 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -32768 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -32768 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -32768 and size: 256" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 32767 and size: 16" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 32767 and size: 32" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 32767 and size: 16" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 32767 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 32767 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 32767 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 32767 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -256 and size: 8" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -256 and size: 16" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -256 and size: 32" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -256 and size: 32" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -256 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -256 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -256 and size: 256" duration="0" />
@@ -180,9 +180,9 @@
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 256 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 256 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 256 and size: 64" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 256 and size: 128" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 256 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 256 and size: 256" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -128 and size: 8" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -128 and size: 8" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -128 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -128 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -128 and size: 64" duration="0" />
@@ -195,17 +195,17 @@
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 128 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 128 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -64 and size: 8" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -64 and size: 16" duration="1" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -64 and size: 32" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -64 and size: 16" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -64 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -64 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -64 and size: 128" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -64 and size: 256" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -64 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 64 and size: 8" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 64 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 64 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 64 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 64 and size: 128" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 64 and size: 256" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 64 and size: 256" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 32 and size: 8" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 32 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 32 and size: 32" duration="0" />
@@ -217,19 +217,19 @@
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -32 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -32 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -32 and size: 128" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -32 and size: 256" duration="1" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -16 and size: 8" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -32 and size: 256" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -16 and size: 8" duration="1" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -16 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -16 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -16 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -16 and size: 128" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -16 and size: 256" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -16 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 16 and size: 8" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 16 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 16 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 16 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 16 and size: 128" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 16 and size: 256" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 16 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 8 and size: 8" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 8 and size: 16" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 8 and size: 32" duration="0" />
@@ -238,7 +238,7 @@
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 8 and size: 256" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -8 and size: 8" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -8 and size: 16" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -8 and size: 32" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -8 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -8 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -8 and size: 128" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: -8 and size: 256" duration="0" />
@@ -247,9 +247,9 @@
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 0 and size: 32" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 0 and size: 64" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 0 and size: 128" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 0 and size: 256" duration="1" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS UINT should use the same logic as INT" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS BOOL should not break from null" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS INT from hex string should have the right return for value: 0 and size: 256" duration="0" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS UINT should use the same logic as INT" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS BOOL should not break from null" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS BOOL from string should return 00" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS BOOL from string should return 00" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS BOOL from string should return 01" duration="0" />
@@ -257,8 +257,8 @@
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS BOOL from boolean should return 00" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS BOOL from boolean should return 01" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS BOOL from number should return 00" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS BOOL from number should return 01" duration="0" />
-<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS ADDRESS should not break from null" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS BOOL from number should return 01" duration="1" />
+<testCase name="TIP712 Utils TIP712_TYPE_ENCODERS ADDRESS should not break from null" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS ADDRESS should return 183c938611642ae18790db0A1eFC21Dfe009aA1c" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS ADDRESS should return 03d7be9a073d7ed9ac0ccb2558d7f7c6a43d3c0aa993e00f2c03424fff0a80f3" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS STRING should not break from null" duration="0" />
@@ -268,88 +268,88 @@
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS BYTES from fixed size bytes should return 973bb640" duration="0" />
 <testCase name="TIP712 Utils TIP712_TYPE_ENCODERS BYTES from fixed size bytes should return 973bb640" duration="0" />
 <testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: 0" duration="0" />
-<testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: 1" duration="1" />
-<testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: 2" duration="0" />
-<testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: 3" duration="0" />
+<testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: 1" duration="0" />
+<testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: 2" duration="1" />
+<testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: 3" duration="1" />
 <testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: 4" duration="0" />
 <testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: 5" duration="0" />
-<testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: 6" duration="0" />
+<testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: 6" duration="7" />
 <testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: 7" duration="0" />
 <testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: 8" duration="1" />
 <testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: 9" duration="0" />
 <testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: A" duration="0" />
 <testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: B" duration="0" />
 <testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: C" duration="0" />
-<testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: D" duration="0" />
+<testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: D" duration="1" />
 <testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: E" duration="0" />
-<testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: F" duration="1" />
-<testCase name="TIP712 Utils getCoinRefTokensMap should create a map for 2 tokens in the message" duration="0" />
+<testCase name="TIP712 Utils hexBuffer should bufferize every possible byte string of: F" duration="0" />
+<testCase name="TIP712 Utils getCoinRefTokensMap should create a map for 2 tokens in the message" duration="1" />
 <testCase name="TIP712 Utils getCoinRefTokensMap should create a map with a token in being the verifying contract" duration="0" />
 <testCase name="TIP712 Utils getCoinRefTokensMap should create return an empty map for filters v1" duration="0" />
 <testCase name="TIP712 Utils getCoinRefTokensMap should create return an empty map for filters v1" duration="1" />
 <testCase name="TIP712 Utils getCoinRefTokensMap should order correctly the map" duration="0" />
 <testCase name="TIP712 Utils getAppAndVersion should return the app and version" duration="0" />
-<testCase name="TIP712 Utils getFilterDisplayNameAndSigBuffers should return the display name and signature buffers" duration="1" />
+<testCase name="TIP712 Utils getFilterDisplayNameAndSigBuffers should return the display name and signature buffers" duration="0" />
 <testCase name="TIP712 Utils getPayloadForFilterV2 should return a payload for a raw filter" duration="0" />
 <testCase name="TIP712 Utils getPayloadForFilterV2 should return a payload for a datetime filter" duration="1" />
 <testCase name="TIP712 Utils getPayloadForFilterV2 should return a payload for a token filter" duration="0" />
 <testCase name="TIP712 Utils getPayloadForFilterV2 should return the coinRef if a token hasn&apos;t been registered by the device (token not in CAL for example)" duration="0" />
-<testCase name="TIP712 Utils getPayloadForFilterV2 should return a payload for an amount filter" duration="0" />
+<testCase name="TIP712 Utils getPayloadForFilterV2 should return a payload for an amount filter" duration="1" />
 <testCase name="TIP712 Utils getPayloadForFilterV2 should return the coinRef if a token hasn&apos;t been registered by the device (token not in CAL for example)" duration="0" />
 <testCase name="TIP712 Utils getPayloadForFilterV2 should should throw for an unknown filter format" duration="1" />
 </file>
 <file path="/Users/lanyu/zyd/ledger/ledger-live/libs/ledgerjs/packages/hw-app-trx/tests/Trx.test.ts">
-<testCase name="getAppConfiguration" duration="5" />
-<testCase name="getAddress" duration="1" />
+<testCase name="getAppConfiguration" duration="2" />
+<testCase name="getAddress" duration="0" />
 <testCase name="signTransaction" duration="1" />
 <testCase name="signTransactionHash" duration="0" />
-<testCase name="signPersonalMessage" duration="1" />
+<testCase name="signPersonalMessage" duration="2" />
 <testCase name="getSharedKey" duration="0" />
 <testCase name="signTIP712HashedMessage" duration="0" />
 </file>
-<file path="/Users/lanyu/zyd/ledger/ledger-live/libs/ledgerjs/packages/hw-app-trx/tests/TIP712/filtered-signMessage.unit.test.ts">
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 0.json sample message" duration="62" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 1.json sample message" duration="3" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 2.json sample message" duration="4" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 3.json sample message" duration="3" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 4.json sample message" duration="3" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 5.json sample message" duration="5" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 6.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 7.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 8.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 9.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 10.json sample message" duration="1" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 11.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 12.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 13.json sample message" duration="3" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 14.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 14bis.json sample message and have the same APDUs as 14.json" duration="1" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 15-permit.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 16-permit2.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 17-uniswapx.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 18-1inch-fusion.json sample message" duration="1" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 1-empty-array-1-level.json sample message" duration="3" />
-<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 1-empty-array-2-levels.json sample message" duration="1" />
-</file>
 <file path="/Users/lanyu/zyd/ledger/ledger-live/libs/ledgerjs/packages/hw-app-trx/tests/TIP712/noFilter-signMessage.unit.test.ts">
-<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 0.json sample message" duration="40" />
-<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 1.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 2.json sample message" duration="3" />
+<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 0.json sample message" duration="56" />
+<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 1.json sample message" duration="3" />
+<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 2.json sample message" duration="5" />
 <testCase name="TIP712 SignTIP712Message without filters should sign correctly the 3.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 4.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 5.json sample message" duration="1" />
-<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 6.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 7.json sample message" duration="3" />
-<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 8.json sample message" duration="2" />
+<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 4.json sample message" duration="5" />
+<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 5.json sample message" duration="8" />
+<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 6.json sample message" duration="8" />
+<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 7.json sample message" duration="1" />
+<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 8.json sample message" duration="4" />
 <testCase name="TIP712 SignTIP712Message without filters should sign correctly the 9.json sample message" duration="1" />
 <testCase name="TIP712 SignTIP712Message without filters should sign correctly the 10.json sample message" duration="1" />
 <testCase name="TIP712 SignTIP712Message without filters should sign correctly the 11.json sample message" duration="1" />
 <testCase name="TIP712 SignTIP712Message without filters should sign correctly the 12.json sample message" duration="1" />
 <testCase name="TIP712 SignTIP712Message without filters should sign correctly the 13.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 14.json sample message (shorthand byte string =&gt; 0x3 vs 0x03)" duration="7" />
-<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 15-permit.json sample message" duration="1" />
+<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 14.json sample message (shorthand byte string =&gt; 0x3 vs 0x03)" duration="8" />
+<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 15-permit.json sample message" duration="4" />
 <testCase name="TIP712 SignTIP712Message without filters should sign correctly the 16-permit2.json sample message" duration="1" />
 <testCase name="TIP712 SignTIP712Message without filters should sign correctly the 17-uniswapx.json sample message" duration="2" />
-<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 18-1inch-fusion.json sample message" duration="1" />
+<testCase name="TIP712 SignTIP712Message without filters should sign correctly the 18-1inch-fusion.json sample message" duration="2" />
+</file>
+<file path="/Users/lanyu/zyd/ledger/ledger-live/libs/ledgerjs/packages/hw-app-trx/tests/TIP712/filtered-signMessage.unit.test.ts">
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 0.json sample message" duration="111" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 1.json sample message" duration="2" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 2.json sample message" duration="5" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 3.json sample message" duration="3" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 4.json sample message" duration="3" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 5.json sample message" duration="3" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 6.json sample message" duration="2" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 7.json sample message" duration="3" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 8.json sample message" duration="3" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 9.json sample message" duration="2" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 10.json sample message" duration="2" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 11.json sample message" duration="2" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 12.json sample message" duration="1" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 13.json sample message" duration="2" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 14.json sample message" duration="4" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 14bis.json sample message and have the same APDUs as 14.json" duration="1" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 15-permit.json sample message" duration="2" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 16-permit2.json sample message" duration="1" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 17-uniswapx.json sample message" duration="2" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 18-1inch-fusion.json sample message" duration="2" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 1-empty-array-1-level.json sample message" duration="2" />
+<testCase name="TIP712 SignTIP712Message with filters v2 should sign correctly the 1-empty-array-2-levels.json sample message" duration="1" />
 </file>
 </testExecutions>
