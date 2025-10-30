@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { GlobalProvider } from "@/app/context/GlobalContext";
 import { Toaster } from "@/components/ui/sonner";
+import ClientOnly from "@/components/ClientOnly";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,12 +18,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <meta httpEquiv="Content-Language" content="en" />
+        <script src="/force-lang-en.js" defer></script>
+      </head>
       <body className={inter.className}>
-        <GlobalProvider>
-          {children}
-          <Toaster />
-        </GlobalProvider>
+        <ClientOnly>
+          <GlobalProvider>
+            {children}
+            <Toaster />
+          </GlobalProvider>
+        </ClientOnly>
       </body>
     </html>
   );

@@ -14,9 +14,8 @@ export enum DeviceType {
 }
 
 export enum DeviceModel {
-  nanoS = 'nanoS',
-  nanoX = 'nanoX',
-  nanoSP = 'nanoSP',
+  nanoSP = 'nanosp',
+  stax = 'stax',
 }
 
 export interface SpeculosEmulator {
@@ -61,7 +60,7 @@ const defaultState: GlobalState = {
     appVersion: '0.7.0',
     coinapps: './bin',
     firmware: '2.0',
-    overridesAppPath: 'nanos2/app.elf',
+    overridesAppPath: `${DeviceModel.nanoSP}/app.elf`,
     seed: 'abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about',
   },
   ledgerHQ: {

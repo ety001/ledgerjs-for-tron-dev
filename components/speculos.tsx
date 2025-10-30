@@ -29,6 +29,7 @@ import SpeculosSettings from "@/components/speculosSettings";
 import { toast } from "sonner";
 import { emulatorCreate, emulatorDestroy, sendBtn, BtnKey } from "@/lib/client";
 import Loading from "@/components/loading";
+import { DeviceModel } from "@/app/context/GlobalContext";
 
 export default function Speculos() {
   const [status, setStatus] = useState<"running" | "stopped">("stopped");
@@ -93,6 +94,84 @@ export default function Speculos() {
       return;
     }
     setTimestamp(Date.now().toString());
+  };
+
+  const handleMouseDown = async (event: React.MouseEvent<HTMLDivElement>) => {
+    if (status !== "running") return;
+    
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = Math.round(event.clientX - rect.left);
+    const y = Math.round(event.clientY - rect.top);
+    
+    const fingerData = {
+      deviceId: state.speculos.deviceId,
+      action: 'press',
+      x: x,
+      y: y
+    };
+    
+    console.log('fingerData (press):', fingerData);
+    
+    try {
+      const response = await fetch('/api/speculos/finger', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(fingerData),
+      });
+      
+      const result = await response.json();
+      
+      if (result.status === "error") {
+        setError(result.message ?? "Failed to press finger");
+        return;
+      }
+      
+      setTimestamp(Date.now().toString());
+    } catch (error) {
+      const errorLog = `Finger API error: ${error}\n`;
+      setError("Failed to call finger API");
+    }
+  };
+
+  const handleMouseUp = async (event: React.MouseEvent<HTMLDivElement>) => {
+    if (status !== "running") return;
+    
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = Math.round(event.clientX - rect.left);
+    const y = Math.round(event.clientY - rect.top);
+    
+    const fingerData = {
+      deviceId: state.speculos.deviceId,
+      action: 'release',
+      x: x,
+      y: y
+    };
+    
+    console.log('fingerData (release):', fingerData);
+    
+    try {
+      const response = await fetch('/api/speculos/finger', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(fingerData),
+      });
+      
+      const result = await response.json();
+      
+      if (result.status === "error") {
+        setError(result.message ?? "Failed to release finger");
+        return;
+      }
+      
+      setTimestamp(Date.now().toString());
+    } catch (error) {
+      const errorLog = `Finger API error: ${error}\n`;
+      setError("Failed to call finger API");
+    }
   };
 
   useEffect(() => {
@@ -163,11 +242,17 @@ export default function Speculos() {
       {status === "running" && (
         <CardContent>
           <div className="flex flex-col gap-4">
-            <img
-              src={`/api/speculos/screenshot?force=${timestamp}&deviceId=${state.speculos.deviceId}`}
-              alt="Speculos"
-              className="w-full"
-            />
+            <div 
+              className="relative cursor-pointer select-none"
+              onMouseDown={handleMouseDown}
+              onMouseUp={handleMouseUp}
+            >
+              <img
+                src={`/api/speculos/screenshot?force=${timestamp}&deviceId=${state.speculos.deviceId}`}
+                alt="Speculos"
+                className={state.speculos.model === DeviceModel.stax ? "w-[400px] h-[672px]" : "w-full"}
+              />
+            </div>
             <div className="flex justify-center gap-2">
               <Button
                 className="bg-teal-500/100 font-bold"
