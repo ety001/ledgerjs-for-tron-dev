@@ -57,6 +57,10 @@ async function signPersonalMessage(device: SpeculosDeviceInternal, path: string,
 async function signTIP712Message(device: SpeculosDeviceInternal, path: string, message: string) {
   const transport = device.transport;
   const app = new Trx(transport);
+  app.setLoadConfig({
+    cryptoassetsBaseURL: "http://localhost:8080/cryptoassets",
+    calServiceURL: "http://localhost:8080",
+  });
   const appConfig = await app.getAppConfiguration();
   console.log(appConfig);
   const address = await app.getAddress(path);

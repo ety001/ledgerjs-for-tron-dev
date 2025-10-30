@@ -31,6 +31,7 @@ import { Terminal } from "lucide-react";
 import { useGlobal } from "@/app/context/GlobalContext";
 import { TronLinkAdapter } from "@tronweb3/tronwallet-adapter-tronlink";
 import { transport } from "@/lib/client";
+import JSONbig from "json-bigint";
 
 export default function SignTIP712Message() {
   const [result, setResult] = useState<string>("");
@@ -52,10 +53,15 @@ export default function SignTIP712Message() {
           toast.error('Please start speculos first.');
           return;
         }
-        console.log('tip712msg:', JSON.parse(values.message));
+        // make "value_biggest": 115792089237316195423570985008687907853269984665640564039457584007913129639935
+        // to be "value_biggest": "115792089237316195423570985008687907853269984665640564039457584007913129639935"
+        // instead of "value_biggest": 1.157920892373162e+77
+        const parsed712Message = JSONbig({ storeAsString: true }).parse(values.message);
+
+        console.log('tip712msg:', parsed712Message);
         const res = await transport(state.speculos.deviceId, 'signTIP712Message', {
           path: "44'/195'/0'/0/0",
-          message: JSON.parse(values.message),
+          message: parsed712Message,
         });
         if (res.status === 'error') {
           toast.error(res.msg ?? 'Failed to sign message');
