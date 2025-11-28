@@ -52,7 +52,9 @@
   },
   "pnpm": {
     "overrides": {
-      "@ledgerhq/hw-transport": "^6.31.12"
+      "@ledgerhq/hw-transport": "^6.31.12",
+      "@ledgerhq/cryptoassets-evm-signatures": "^13.6.5",
+      "@ledgerhq/logs": "^6.13.0"
     }
   }
 }
